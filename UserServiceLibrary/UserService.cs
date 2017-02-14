@@ -15,12 +15,12 @@ namespace UserServiceLibrary
         /// <summary>
         /// Constructs an instance of <see cref="UserService"/>
         /// </summary>
-        /// <param name="uniqueIdGenerator">Delegate that generates unique ides</param>
+        /// <param name="uniqueIdGenerator">Delegate that generates unique ides.
+        /// If not specified, default idGenerator will be used</param>
         /// <param name="userEqualityComparer">Uses to determine if two users are same. 
-        /// If not specified, default <see cref="User"/> comparer will be used</param>
-        /// <exception cref="ArgumentNullException">Throws if <paramref name="uniqueIdGenerator"/>
-        /// is null</exception>
-        public UserService(Func<int> uniqueIdGenerator, 
+        /// If not specified, <see cref="EqualityComparer{User}.Default"/> will be used</param>
+        public UserService(
+            Func<int> uniqueIdGenerator = null, 
             IEqualityComparer<User> userEqualityComparer = null)
         {
             throw new NotImplementedException();
