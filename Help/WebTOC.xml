@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<HelpTOC>
+
+  <HelpTOCNode Id="a755dace-b9ef-4203-91cd-dd1bda7afeaa" Title="UserServiceLibrary" Url="html/c73303a0-0f69-10e0-2b68-5d69e9f7140f.htm">
+    <HelpTOCNode Id="75b77d3e-9e2d-4254-a8c6-618d48fe91e0" Title="User Class" Url="html/b1a3c362-2717-05b5-7efa-5632fbf3a00e.htm">
+      <HelpTOCNode Title="User Constructor " Url="html/4c115445-4500-78e3-6467-bcb0e3c59e0c.htm" />
+      <HelpTOCNode Title="User Methods" Url="html/c4fe8a10-5947-99b9-2d44-6e09036d5e2b.htm" />
+      <HelpTOCNode Id="54dac1a5-02eb-4f51-ad2a-2d2afe1a7dc4" Title="User Properties" Url="html/45aa5252-d0c4-c9b2-a777-803b981f28ce.htm">
+        <HelpTOCNode Title="DateOfBirth Property " Url="html/7c094b79-8ef8-5503-ca27-8be6bbd41bf8.htm" />
+        <HelpTOCNode Title="Firstname Property " Url="html/3515c926-1b1f-defd-f8d0-898c500196e1.htm" />
+        <HelpTOCNode Title="Id Property " Url="html/623c8812-5253-464b-4328-cfd26fd1bd87.htm" />
+        <HelpTOCNode Title="Secondname Property " Url="html/627f0db6-9b19-1b33-94c5-dcc037affb47.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="d7257226-6f2e-4469-b92e-fdf0e88710e2" Title="UserService Class" Url="html/8efa4dd0-8d39-9d4e-c8f8-f3aeeea62bcd.htm">
+      <HelpTOCNode Title="UserService Constructor " Url="html/ca5345fa-d78a-4b91-9d3b-604071b443e5.htm" />
+      <HelpTOCNode Id="8509d26d-dc30-45e7-904c-e575d9aae068" Title="UserService Methods" Url="html/8b514121-3dd9-4d4e-52c0-aba17405a587.htm">
+        <HelpTOCNode Title="Add Method " Url="html/76580c20-3a9a-6972-179e-11fd18dd5eea.htm" />
+        <HelpTOCNode Title="Remove Method " Url="html/25850b42-9fed-6b2e-e60f-3b4c5f42f864.htm" />
+        <HelpTOCNode Title="Search Method " Url="html/5e0da6cb-86ed-2bb8-cc3b-c9d14895109a.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+  </HelpTOCNode>
+  <HelpTOCNode Id="8f357c9a-e748-46ca-86e9-9c52a4564c83" Title="UserServiceLibrary.Exceptions" Url="html/ca190ea0-798e-9a27-ec3f-9356e56cbaba.htm">
+    <HelpTOCNode Id="2c60b686-8d8c-45e9-b9a0-a9d43a4eb091" Title="NotInitializedUserException Class" Url="html/a6438858-cc09-c11b-0d7f-c92c8f3cc434.htm">
+      <HelpTOCNode Id="9f843d01-0533-43cb-9ae4-db7184127336" Title="NotInitializedUserException Constructor " Url="html/0d70bdc0-f279-db19-e788-71497373ea18.htm">
+        <HelpTOCNode Title="NotInitializedUserException Constructor " Url="html/7b3d325d-f706-94e0-236c-683030895064.htm" />
+        <HelpTOCNode Title="NotInitializedUserException Constructor (String)" Url="html/ee072738-6ba6-3f1f-8325-2f36cb0aa3dc.htm" />
+        <HelpTOCNode Title="NotInitializedUserException Constructor (SerializationInfo, StreamingContext)" Url="html/c7971166-8b4d-8f6f-a326-9e8b1a3fe1da.htm" />
+        <HelpTOCNode Title="NotInitializedUserException Constructor (String, Exception)" Url="html/131c6e57-511d-a2b3-b12c-b1d3286088c0.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Title="NotInitializedUserException Methods" Url="html/a123d5ab-3a63-5521-8364-a3a0bcd889df.htm" />
+      <HelpTOCNode Title="NotInitializedUserException Properties" Url="html/12eb77c1-0f09-5e6d-11b4-dfedafcf35ec.htm" />
+      <HelpTOCNode Title="NotInitializedUserException Events" Url="html/a5f60dce-1415-dea6-6792-d59302d9d5b6.htm" />
+    </HelpTOCNode>
+    <HelpTOCNode Id="39de3a7b-8478-4424-b4e0-11485bcc80d7" Title="UserAlreadyExistsException Class" Url="html/ec92abff-dfce-e65f-10fd-2c8e16f86cc3.htm">
+      <HelpTOCNode Id="59a38fa6-473f-48c1-b5f0-cfbc3fbf7f18" Title="UserAlreadyExistsException Constructor " Url="html/286b8c9f-81f8-0e90-6b49-5b0299d748b0.htm">
+        <HelpTOCNode Title="UserAlreadyExistsException Constructor " Url="html/c16009a4-9ff6-d471-6975-7d2bc36249e6.htm" />
+        <HelpTOCNode Title="UserAlreadyExistsException Constructor (String)" Url="html/20e1b122-c788-94cc-515b-2898d46195fa.htm" />
+        <HelpTOCNode Title="UserAlreadyExistsException Constructor (SerializationInfo, StreamingContext)" Url="html/74bfe869-94d4-4acb-fc1e-df096c0f2ac3.htm" />
+        <HelpTOCNode Title="UserAlreadyExistsException Constructor (String, Exception)" Url="html/b6b3170d-4f47-dcab-42be-63cd09eec157.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Title="UserAlreadyExistsException Methods" Url="html/c0f8b246-becc-2e00-14e4-4b58e04eb5fe.htm" />
+      <HelpTOCNode Title="UserAlreadyExistsException Properties" Url="html/3e1e379f-6f4c-7ba2-e645-f9268d6f363b.htm" />
+      <HelpTOCNode Title="UserAlreadyExistsException Events" Url="html/be3a400c-6513-35c6-df84-ee3431431ad3.htm" />
+    </HelpTOCNode>
+    <HelpTOCNode Id="0ac62d9b-97a5-461a-806f-3a3bfc26c95b" Title="UserDoesNotExistException Class" Url="html/e2941b8e-bdfc-eb3b-a41a-0b1ea4a3c35f.htm">
+      <HelpTOCNode Id="99a6372a-55cb-4460-8049-ba8aef4edc62" Title="UserDoesNotExistException Constructor " Url="html/c90b26f7-1026-0b5c-edea-a8818af0a5da.htm">
+        <HelpTOCNode Title="UserDoesNotExistException Constructor " Url="html/4e2d2298-b32b-5aa2-a26b-fee67ed09bcc.htm" />
+        <HelpTOCNode Title="UserDoesNotExistException Constructor (String)" Url="html/403cd7b9-c392-c06c-7369-307fa4c83e8f.htm" />
+        <HelpTOCNode Title="UserDoesNotExistException Constructor (SerializationInfo, StreamingContext)" Url="html/4c02c74b-8d00-4335-16af-40ca7d635a51.htm" />
+        <HelpTOCNode Title="UserDoesNotExistException Constructor (String, Exception)" Url="html/e1153ac8-ccf1-8b61-3d52-50020ea7ce7e.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Title="UserDoesNotExistException Methods" Url="html/ccb57c0a-3a60-4cfd-fc7b-b19d264c1500.htm" />
+      <HelpTOCNode Title="UserDoesNotExistException Properties" Url="html/d1bf939a-082e-f3f4-0b02-49587d5bb33a.htm" />
+      <HelpTOCNode Title="UserDoesNotExistException Events" Url="html/7a41b449-329e-cdf1-9795-c64615d0e50b.htm" />
+    </HelpTOCNode>
+    <HelpTOCNode Id="9bce17fc-54e3-4326-9774-745d5c8e6397" Title="UserServiceException Class" Url="html/a99d8c57-a041-89b9-b20d-8751bdbc413e.htm">
+      <HelpTOCNode Id="086f3f5a-d58b-40b0-8c70-9d5becee6675" Title="UserServiceException Constructor " Url="html/0348a09d-88db-a0ce-495e-f85ff34b24f4.htm">
+        <HelpTOCNode Title="UserServiceException Constructor " Url="html/7c769ef8-3cd0-c4c9-958c-9c383c053e51.htm" />
+        <HelpTOCNode Title="UserServiceException Constructor (String)" Url="html/2b40337c-c9e4-0252-3dea-b1647643cf46.htm" />
+        <HelpTOCNode Title="UserServiceException Constructor (SerializationInfo, StreamingContext)" Url="html/94bfe52f-e070-9f41-bbaf-54d00f82b499.htm" />
+        <HelpTOCNode Title="UserServiceException Constructor (String, Exception)" Url="html/a1a6ba72-cee4-c7d8-8bc9-2c5841e9b8a7.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Title="UserServiceException Methods" Url="html/cf8740d0-adaa-e925-459d-deb290ecfb44.htm" />
+      <HelpTOCNode Title="UserServiceException Properties" Url="html/156024a7-9887-e857-fdef-60d47c8c4431.htm" />
+      <HelpTOCNode Title="UserServiceException Events" Url="html/cba8b018-2d52-36c8-73c7-02f011105e28.htm" />
+    </HelpTOCNode>
+  </HelpTOCNode>
+  <HelpTOCNode Id="c52143d7-68f5-4dea-9211-3f843e8edc2b" Title="UserServiceLibrary.Interfaces" Url="html/002d818e-c2c3-a9dd-1d53-0d89bbfbbb53.htm">
+    <HelpTOCNode Id="3647431f-dce2-44f6-964e-b8ef464f4a19" Title="IUserService Interface" Url="html/0cb4de3f-c210-4f7d-1148-77ce011f3065.htm">
+      <HelpTOCNode Id="73aec10a-b294-4884-a8f2-dbb0f4034be4" Title="IUserService Methods" Url="html/8b26105a-a3b1-1bbf-e30f-231d810b78ff.htm">
+        <HelpTOCNode Title="Add Method " Url="html/0de4056a-26e3-6468-8262-e9e2b2de275a.htm" />
+        <HelpTOCNode Title="Remove Method " Url="html/cfe0fe1d-edd3-8168-930c-3a3e723f7940.htm" />
+        <HelpTOCNode Title="Search Method " Url="html/019ffe88-560f-c85e-07e3-9b8262e9f9bb.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+  </HelpTOCNode>
+</HelpTOC>

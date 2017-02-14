@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<HelpKI>
+  <HelpKINode Title="Add method">
+    <HelpKINode Title="IUserService.Add Method " Url="html/0de4056a-26e3-6468-8262-e9e2b2de275a.htm" />
+    <HelpKINode Title="UserService.Add Method " Url="html/76580c20-3a9a-6972-179e-11fd18dd5eea.htm" />
+  </HelpKINode>
+  <HelpKINode Title="DateOfBirth property" Url="html/7c094b79-8ef8-5503-ca27-8be6bbd41bf8.htm" />
+  <HelpKINode Title="Firstname property" Url="html/3515c926-1b1f-defd-f8d0-898c500196e1.htm" />
+  <HelpKINode Title="Id property" Url="html/623c8812-5253-464b-4328-cfd26fd1bd87.htm" />
+  <HelpKINode Title="IUserService interface">
+    <HelpKINode Title="IUserService Interface" Url="html/0cb4de3f-c210-4f7d-1148-77ce011f3065.htm" />
+    <HelpKINode Title="about IUserService interface" Url="html/0cb4de3f-c210-4f7d-1148-77ce011f3065.htm" />
+    <HelpKINode Title="methods" Url="html/8b26105a-a3b1-1bbf-e30f-231d810b78ff.htm" />
+  </HelpKINode>
+  <HelpKINode Title="IUserService.Add method" Url="html/0de4056a-26e3-6468-8262-e9e2b2de275a.htm" />
+  <HelpKINode Title="IUserService.Remove method" Url="html/cfe0fe1d-edd3-8168-930c-3a3e723f7940.htm" />
+  <HelpKINode Title="IUserService.Search method" Url="html/019ffe88-560f-c85e-07e3-9b8262e9f9bb.htm" />
+  <HelpKINode Title="NotInitializedUserException class">
+    <HelpKINode Title="NotInitializedUserException Class" Url="html/a6438858-cc09-c11b-0d7f-c92c8f3cc434.htm" />
+    <HelpKINode Title="about NotInitializedUserException class" Url="html/a6438858-cc09-c11b-0d7f-c92c8f3cc434.htm" />
+    <HelpKINode Title="constructor" Url="html/0d70bdc0-f279-db19-e788-71497373ea18.htm" />
+    <HelpKINode Title="events" Url="html/a5f60dce-1415-dea6-6792-d59302d9d5b6.htm" />
+    <HelpKINode Title="methods" Url="html/a123d5ab-3a63-5521-8364-a3a0bcd889df.htm" />
+    <HelpKINode Title="properties" Url="html/12eb77c1-0f09-5e6d-11b4-dfedafcf35ec.htm" />
+  </HelpKINode>
+  <HelpKINode Title="NotInitializedUserException.NotInitializedUserException constructor" Url="html/0d70bdc0-f279-db19-e788-71497373ea18.htm" />
+  <HelpKINode Title="Remove method">
+    <HelpKINode Title="IUserService.Remove Method " Url="html/cfe0fe1d-edd3-8168-930c-3a3e723f7940.htm" />
+    <HelpKINode Title="UserService.Remove Method " Url="html/25850b42-9fed-6b2e-e60f-3b4c5f42f864.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Search method">
+    <HelpKINode Title="IUserService.Search Method " Url="html/019ffe88-560f-c85e-07e3-9b8262e9f9bb.htm" />
+    <HelpKINode Title="UserService.Search Method " Url="html/5e0da6cb-86ed-2bb8-cc3b-c9d14895109a.htm" />
+  </HelpKINode>
+  <HelpKINode Title="Secondname property" Url="html/627f0db6-9b19-1b33-94c5-dcc037affb47.htm" />
+  <HelpKINode Title="User class">
+    <HelpKINode Title="User Class" Url="html/b1a3c362-2717-05b5-7efa-5632fbf3a00e.htm" />
+    <HelpKINode Title="about User class" Url="html/b1a3c362-2717-05b5-7efa-5632fbf3a00e.htm" />
+    <HelpKINode Title="constructor" Url="html/4c115445-4500-78e3-6467-bcb0e3c59e0c.htm" />
+    <HelpKINode Title="methods" Url="html/c4fe8a10-5947-99b9-2d44-6e09036d5e2b.htm" />
+    <HelpKINode Title="properties" Url="html/45aa5252-d0c4-c9b2-a777-803b981f28ce.htm" />
+  </HelpKINode>
+  <HelpKINode Title="User.DateOfBirth property" Url="html/7c094b79-8ef8-5503-ca27-8be6bbd41bf8.htm" />
+  <HelpKINode Title="User.Firstname property" Url="html/3515c926-1b1f-defd-f8d0-898c500196e1.htm" />
+  <HelpKINode Title="User.Id property" Url="html/623c8812-5253-464b-4328-cfd26fd1bd87.htm" />
+  <HelpKINode Title="User.Secondname property" Url="html/627f0db6-9b19-1b33-94c5-dcc037affb47.htm" />
+  <HelpKINode Title="User.User constructor" Url="html/4c115445-4500-78e3-6467-bcb0e3c59e0c.htm" />
+  <HelpKINode Title="UserAlreadyExistsException class">
+    <HelpKINode Title="UserAlreadyExistsException Class" Url="html/ec92abff-dfce-e65f-10fd-2c8e16f86cc3.htm" />
+    <HelpKINode Title="about UserAlreadyExistsException class" Url="html/ec92abff-dfce-e65f-10fd-2c8e16f86cc3.htm" />
+    <HelpKINode Title="constructor" Url="html/286b8c9f-81f8-0e90-6b49-5b0299d748b0.htm" />
+    <HelpKINode Title="events" Url="html/be3a400c-6513-35c6-df84-ee3431431ad3.htm" />
+    <HelpKINode Title="methods" Url="html/c0f8b246-becc-2e00-14e4-4b58e04eb5fe.htm" />
+    <HelpKINode Title="properties" Url="html/3e1e379f-6f4c-7ba2-e645-f9268d6f363b.htm" />
+  </HelpKINode>
+  <HelpKINode Title="UserAlreadyExistsException.UserAlreadyExistsException constructor" Url="html/286b8c9f-81f8-0e90-6b49-5b0299d748b0.htm" />
+  <HelpKINode Title="UserDoesNotExistException class">
+    <HelpKINode Title="UserDoesNotExistException Class" Url="html/e2941b8e-bdfc-eb3b-a41a-0b1ea4a3c35f.htm" />
+    <HelpKINode Title="about UserDoesNotExistException class" Url="html/e2941b8e-bdfc-eb3b-a41a-0b1ea4a3c35f.htm" />
+    <HelpKINode Title="constructor" Url="html/c90b26f7-1026-0b5c-edea-a8818af0a5da.htm" />
+    <HelpKINode Title="events" Url="html/7a41b449-329e-cdf1-9795-c64615d0e50b.htm" />
+    <HelpKINode Title="methods" Url="html/ccb57c0a-3a60-4cfd-fc7b-b19d264c1500.htm" />
+    <HelpKINode Title="properties" Url="html/d1bf939a-082e-f3f4-0b02-49587d5bb33a.htm" />
+  </HelpKINode>
+  <HelpKINode Title="UserDoesNotExistException.UserDoesNotExistException constructor" Url="html/c90b26f7-1026-0b5c-edea-a8818af0a5da.htm" />
+  <HelpKINode Title="UserService class">
+    <HelpKINode Title="UserService Class" Url="html/8efa4dd0-8d39-9d4e-c8f8-f3aeeea62bcd.htm" />
+    <HelpKINode Title="about UserService class" Url="html/8efa4dd0-8d39-9d4e-c8f8-f3aeeea62bcd.htm" />
+    <HelpKINode Title="constructor" Url="html/ca5345fa-d78a-4b91-9d3b-604071b443e5.htm" />
+    <HelpKINode Title="methods" Url="html/8b514121-3dd9-4d4e-52c0-aba17405a587.htm" />
+  </HelpKINode>
+  <HelpKINode Title="UserService.Add method" Url="html/76580c20-3a9a-6972-179e-11fd18dd5eea.htm" />
+  <HelpKINode Title="UserService.Remove method" Url="html/25850b42-9fed-6b2e-e60f-3b4c5f42f864.htm" />
+  <HelpKINode Title="UserService.Search method" Url="html/5e0da6cb-86ed-2bb8-cc3b-c9d14895109a.htm" />
+  <HelpKINode Title="UserService.UserService constructor" Url="html/ca5345fa-d78a-4b91-9d3b-604071b443e5.htm" />
+  <HelpKINode Title="UserServiceException class">
+    <HelpKINode Title="UserServiceException Class" Url="html/a99d8c57-a041-89b9-b20d-8751bdbc413e.htm" />
+    <HelpKINode Title="about UserServiceException class" Url="html/a99d8c57-a041-89b9-b20d-8751bdbc413e.htm" />
+    <HelpKINode Title="constructor" Url="html/0348a09d-88db-a0ce-495e-f85ff34b24f4.htm" />
+    <HelpKINode Title="events" Url="html/cba8b018-2d52-36c8-73c7-02f011105e28.htm" />
+    <HelpKINode Title="methods" Url="html/cf8740d0-adaa-e925-459d-deb290ecfb44.htm" />
+    <HelpKINode Title="properties" Url="html/156024a7-9887-e857-fdef-60d47c8c4431.htm" />
+  </HelpKINode>
+  <HelpKINode Title="UserServiceException.UserServiceException constructor" Url="html/0348a09d-88db-a0ce-495e-f85ff34b24f4.htm" />
+  <HelpKINode Title="UserServiceLibrary namespace" Url="html/c73303a0-0f69-10e0-2b68-5d69e9f7140f.htm" />
+  <HelpKINode Title="UserServiceLibrary.Exceptions namespace" Url="html/ca190ea0-798e-9a27-ec3f-9356e56cbaba.htm" />
+  <HelpKINode Title="UserServiceLibrary.Exceptions.NotInitializedUserException class" Url="html/a6438858-cc09-c11b-0d7f-c92c8f3cc434.htm" />
+  <HelpKINode Title="UserServiceLibrary.Exceptions.UserAlreadyExistsException class" Url="html/ec92abff-dfce-e65f-10fd-2c8e16f86cc3.htm" />
+  <HelpKINode Title="UserServiceLibrary.Exceptions.UserDoesNotExistException class" Url="html/e2941b8e-bdfc-eb3b-a41a-0b1ea4a3c35f.htm" />
+  <HelpKINode Title="UserServiceLibrary.Exceptions.UserServiceException class" Url="html/a99d8c57-a041-89b9-b20d-8751bdbc413e.htm" />
+  <HelpKINode Title="UserServiceLibrary.Interfaces namespace" Url="html/002d818e-c2c3-a9dd-1d53-0d89bbfbbb53.htm" />
+  <HelpKINode Title="UserServiceLibrary.Interfaces.IUserService interface" Url="html/0cb4de3f-c210-4f7d-1148-77ce011f3065.htm" />
+  <HelpKINode Title="UserServiceLibrary.User class" Url="html/b1a3c362-2717-05b5-7efa-5632fbf3a00e.htm" />
+  <HelpKINode Title="UserServiceLibrary.UserService class" Url="html/8efa4dd0-8d39-9d4e-c8f8-f3aeeea62bcd.htm" />
+</HelpKI>
