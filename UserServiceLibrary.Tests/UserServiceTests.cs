@@ -26,7 +26,7 @@ namespace UserServiceLibrary.Tests
         }
 
         [Test]
-        public void Add_ExistingUser_ExceptionThrown()
+        public void Add_UserTwice_ExceptionThrown()
         {
             // Arrange
             IUserService service = new UserService();
@@ -43,6 +43,33 @@ namespace UserServiceLibrary.Tests
                 {
                     service.Add(user);
                     service.Add(user);
+                });
+        }
+
+        [Test]
+        public void Add_TwoSimilarUsersWithEqualityComparer_ExceptionThrown()
+        {
+            // Arrange
+            IUserService service = new UserService(null, new UserEqualityComparer());
+            User user1 = new User
+            {
+                DateOfBirth = DateTime.Now,
+                Firstname = "Denis",
+                Secondname = "Shilo",
+            };
+            User user2 = new User
+            {
+                DateOfBirth = DateTime.Now,
+                Firstname = "Denis",
+                Secondname = "Shilo",
+            };
+
+            // Act-Assert
+            Assert.Throws<UserAlreadyExistsException>(
+                () =>
+                {
+                    service.Add(user1);
+                    service.Add(user2);
                 });
         }
 
@@ -77,7 +104,7 @@ namespace UserServiceLibrary.Tests
         }
 
         [Test]
-        public void Remove_ExistingUser_NothingHappend()
+        public void Remove_ExistingJustAddedUser_NothingHappend()
         {
             // Arrange
             IUserService service = new UserService();
@@ -94,6 +121,33 @@ namespace UserServiceLibrary.Tests
                 {
                     service.Add(user);
                     service.Remove(user);
+                });
+        }
+
+        [Test]
+        public void Remove_ExistingSimilarUser_NothingHappend()
+        {
+            // Arrange
+            IUserService service = new UserService(null, new UserEqualityComparer());
+            User user1 = new User
+            {
+                DateOfBirth = DateTime.Now,
+                Firstname = "Denis",
+                Secondname = "Shilo",
+            };
+            User user2 = new User
+            {
+                DateOfBirth = DateTime.Now,
+                Firstname = "Denis",
+                Secondname = "Shilo",
+            };
+
+            // Act-Assert
+            Assert.DoesNotThrow(
+                () =>
+                {
+                    service.Add(user1);
+                    service.Remove(user2);
                 });
         }
 
@@ -170,6 +224,30 @@ namespace UserServiceLibrary.Tests
             foreach (var user in actual)
             {
                 Assert.AreEqual("Denis", user.Firstname);
+            }
+        }
+
+        private class UserEqualityComparer : IEqualityComparer<User>
+        {
+            public bool Equals(User firstUser, User secondUser)
+            {
+                if (ReferenceEquals(firstUser, secondUser))
+                {
+                    return true;
+                }
+
+                if (ReferenceEquals(secondUser, null)
+                    || ReferenceEquals(firstUser, null))
+                {
+                    return false;
+                }
+
+                return string.Equals(firstUser.Firstname, secondUser.Firstname);
+            }
+
+            public int GetHashCode(User user)
+            {
+                return user.Firstname.GetHashCode();
             }
         }
     }

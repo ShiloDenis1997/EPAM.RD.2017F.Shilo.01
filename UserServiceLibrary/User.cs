@@ -20,6 +20,6 @@ namespace UserServiceLibrary
 
         public string Secondname { get; set; }
 
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
     }
 }

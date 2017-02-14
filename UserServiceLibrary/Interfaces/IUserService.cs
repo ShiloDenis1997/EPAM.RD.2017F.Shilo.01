@@ -12,7 +12,8 @@ namespace UserServiceLibrary.Interfaces
         /// <summary>
         /// Adds new user to the service
         /// </summary>
-        /// <param name="user">User to add to the service</param>
+        /// <param name="user">User to add to the service. After insertion
+        /// <see cref="User.Id"/> property will be setted to valid user id</param>
         /// <exception cref="NotInitializedUserException">Throws when <paramref name="user"/> has
         /// not initialized fields</exception>
         /// <exception cref="UserAlreadyExistsException">Throws when <paramref name="user"/> 
