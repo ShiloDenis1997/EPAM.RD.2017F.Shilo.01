@@ -149,6 +149,8 @@ namespace UserServiceLibrary.Tests
                     service.Add(user1);
                     service.Remove(user2);
                 });
+            IEnumerable<User> res = service.Search(u => new UserEqualityComparer().Equals(u, user1));
+            Assert.AreEqual(0, res.Count());
         }
 
         [Test]

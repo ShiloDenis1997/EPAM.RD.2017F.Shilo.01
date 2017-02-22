@@ -81,6 +81,7 @@ namespace UserServiceLibrary
                 throw new UserDoesNotExistException(
                     $"{nameof(user)} does not exists");
             }
+            users.Remove(removingUser);
         }
 
         /// <inheritdoc cref="IUserService.Search"/>
