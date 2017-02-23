@@ -16,10 +16,19 @@ namespace UserServiceLibrary
         /// </summary>
         public int Id { get; set; }
 
+        /// <summary>
+        /// First name of user
+        /// </summary>
         public string Firstname { get; set; }
 
+        /// <summary>
+        /// Second name of user
+        /// </summary>
         public string Secondname { get; set; }
 
+        /// <summary>
+        /// User's day of birth
+        /// </summary>
         public DateTime? DateOfBirth { get; set; }
     }
 }

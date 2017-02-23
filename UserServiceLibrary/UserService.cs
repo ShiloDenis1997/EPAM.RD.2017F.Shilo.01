@@ -8,6 +8,10 @@ using UserServiceLibrary.Interfaces;
 
 namespace UserServiceLibrary
 {
+    /// <summary>
+    /// Implementation of <see cref="IUserService"/> to provide a simple
+    /// functionallity of user service
+    /// </summary>
     public class UserService : IUserService
     {
         private IEqualityComparer<User> userEqualityComparer;
@@ -81,6 +85,7 @@ namespace UserServiceLibrary
                 throw new UserDoesNotExistException(
                     $"{nameof(user)} does not exists");
             }
+
             users.Remove(removingUser);
         }
 

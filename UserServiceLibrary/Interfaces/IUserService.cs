@@ -7,6 +7,9 @@ using UserServiceLibrary.Exceptions;
 
 namespace UserServiceLibrary.Interfaces
 {
+    /// <summary>
+    /// Interface of abstract <see cref="User"/> service
+    /// </summary>
     public interface IUserService
     {
         /// <summary>
