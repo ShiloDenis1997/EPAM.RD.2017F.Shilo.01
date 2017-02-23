@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\StatefulService\CannotLoadStateException.cs" />
+    <Compile Include="Exceptions\StatefulService\CannotSaveStateException.cs" />
+    <Compile Include="Exceptions\StatefulService\StatefulServiceException.cs" />
     <Compile Include="Exceptions\UserService\NotInitializedUserException.cs" />
     <Compile Include="Exceptions\UserService\UserDoesNotExistException.cs" />
     <Compile Include="Exceptions\UserService\UserServiceException.cs" />
@@ -53,7 +56,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Exceptions\StatefulService\" />
     <Folder Include="Exceptions\UserStorage\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
