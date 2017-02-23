@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using UserServiceLibrary.Exceptions;
+using UserServiceLibrary.Exceptions.UserService;
 using UserServiceLibrary.Interfaces;
 
 namespace UserServiceLibrary.Tests

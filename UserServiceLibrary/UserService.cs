@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UserServiceLibrary.Exceptions;
+using UserServiceLibrary.Exceptions.UserService;
 using UserServiceLibrary.Interfaces;
 
 namespace UserServiceLibrary

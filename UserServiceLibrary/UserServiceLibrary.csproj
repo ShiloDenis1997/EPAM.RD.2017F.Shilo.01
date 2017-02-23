@@ -41,15 +41,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\NotInitializedUserException.cs" />
-    <Compile Include="Exceptions\UserDoesNotExistException.cs" />
-    <Compile Include="Exceptions\UserServiceException.cs" />
+    <Compile Include="Exceptions\UserService\NotInitializedUserException.cs" />
+    <Compile Include="Exceptions\UserService\UserDoesNotExistException.cs" />
+    <Compile Include="Exceptions\UserService\UserServiceException.cs" />
+    <Compile Include="Interfaces\IStatefulService.cs" />
     <Compile Include="Interfaces\IUserService.cs" />
     <Compile Include="Interfaces\IUserStorage.cs" />
     <Compile Include="User.cs" />
-    <Compile Include="Exceptions\UserAlreadyExistsException.cs" />
+    <Compile Include="Exceptions\UserService\UserAlreadyExistsException.cs" />
     <Compile Include="UserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Exceptions\StatefulService\" />
+    <Folder Include="Exceptions\UserStorage\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

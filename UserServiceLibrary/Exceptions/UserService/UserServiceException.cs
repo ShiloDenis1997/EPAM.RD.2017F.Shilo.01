@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace UserServiceLibrary.Exceptions
+namespace UserServiceLibrary.Exceptions.UserService
 {
     /// <summary>
     /// Root of the exception hierarcy for user services
