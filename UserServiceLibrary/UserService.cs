@@ -21,12 +21,6 @@ namespace UserServiceLibrary
         private ICollection<User> users;
 
         /// <summary>
-        /// If null, <see cref="LoadSavedState"/> and <see cref="SaveState"/>
-        /// will throw <see cref="StatefulServiceException"/>
-        /// </summary>
-        private IUserStorage UserStorage { get; set; }
-
-        /// <summary>
         /// Constructs an instance of <see cref="UserService"/>
         /// </summary>
         /// <param name="uniqueIdGenerator">Delegate that generates unique ides.
@@ -54,8 +48,13 @@ namespace UserServiceLibrary
             this.userEqualityComparer = userEqualityComparer ?? EqualityComparer<User>.Default;
             UserStorage = userStorage;
             users = new HashSet<User>();
-            //users = new LinkedList<User>();
         }
+
+        /// <summary>
+        /// If null, <see cref="LoadSavedState"/> and <see cref="SaveState"/>
+        /// will throw <see cref="StatefulServiceException"/>
+        /// </summary>
+        private IUserStorage UserStorage { get; set; }
 
         /// <inheritdoc cref="IUserService.Add"/>
         public void Add(User user)
@@ -124,6 +123,7 @@ namespace UserServiceLibrary
             {
                 throw new StatefulServiceException("User storage is not provided");
             }
+
             try
             {
                 UserStorage.StoreUsers(users);
@@ -143,6 +143,7 @@ namespace UserServiceLibrary
             {
                 throw new StatefulServiceException("User storage is not provided");
             }
+
             try
             {
                 users = new HashSet<User>(UserStorage.LoadUsers());

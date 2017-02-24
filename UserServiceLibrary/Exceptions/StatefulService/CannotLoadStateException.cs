@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace UserServiceLibrary.Exceptions.StatefulService
 {
-    public class CannotLoadStateException : Exception
+    public class CannotLoadStateException : StatefulServiceException
     {
         public CannotLoadStateException()
         {

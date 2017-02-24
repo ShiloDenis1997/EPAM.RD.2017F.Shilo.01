@@ -9,7 +9,7 @@ namespace UserServiceLibrary
     /// <summary>
     /// Contains data about user
     /// </summary>
-    public class User
+    public class User : IEquatable<User>
     {
         /// <summary>
         /// Unique user id
@@ -30,5 +30,65 @@ namespace UserServiceLibrary
         /// User's day of birth
         /// </summary>
         public DateTime? DateOfBirth { get; set; }
+
+        /// <summary>
+        /// Performs equality comparing with other <see cref="User"/>'s instance
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns>true if objects are equal, false another</returns>
+        public bool Equals(User other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return Id == other.Id && 
+                string.Equals(Firstname, other.Firstname, StringComparison.OrdinalIgnoreCase) && 
+                string.Equals(Secondname, other.Secondname, StringComparison.OrdinalIgnoreCase) && 
+                DateOfBirth.Equals(other.DateOfBirth);
+        }
+
+        /// <summary>
+        /// Performs equality comparing with other object
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns>true if objects are equal, false another</returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((User)obj);
+        }
+
+        /// <summary>
+        /// Returns a hash code of <see cref="User"/>. 
+        /// Id field mustn't changing if <see cref="User"/> is
+        /// in a hashtable
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            var hashCode = Id;
+            return hashCode;
+        }
     }
 }
