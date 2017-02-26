@@ -54,9 +54,10 @@
     <Compile Include="Interfaces\IStatefulService.cs" />
     <Compile Include="Interfaces\IUserService.cs" />
     <Compile Include="Interfaces\IUserStorage.cs" />
+    <Compile Include="SlaveUserService.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Exceptions\UserService\UserAlreadyExistsException.cs" />
-    <Compile Include="UserService.cs" />
+    <Compile Include="MasterUserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

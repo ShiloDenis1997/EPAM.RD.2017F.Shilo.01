@@ -14,14 +14,14 @@ namespace UserServiceLibrary
     /// Implementation of <see cref="IUserService"/> to provide a simple
     /// functionallity of user service
     /// </summary>
-    public class UserService : IMasterService, IStatefulService
+    public class MasterUserService : IMasterService, IStatefulService
     {
         private IEqualityComparer<User> userEqualityComparer;
         private Func<int> uniqueIdGenerator;
         private ICollection<User> users;
 
         /// <summary>
-        /// Constructs an instance of <see cref="UserService"/>
+        /// Constructs an instance of <see cref="MasterUserService"/>
         /// </summary>
         /// <param name="uniqueIdGenerator">Delegate that generates unique ides.
         /// If not specified, default idGenerator will be used</param>
@@ -30,7 +30,7 @@ namespace UserServiceLibrary
         /// <param name="userStorage">Implementation of <see cref="IUserStorage"/> interface.
         /// If not provided, <see cref="SaveState"/> and <see cref="LoadSavedState"/>
         /// will throw an <see cref="StatefulServiceException"/></param>
-        public UserService(
+        public MasterUserService(
             Func<int> uniqueIdGenerator = null, 
             IEqualityComparer<User> userEqualityComparer = null,
             IUserStorage userStorage = null)
@@ -120,7 +120,8 @@ namespace UserServiceLibrary
                     $"{nameof(predicate)} is null");
             }
 
-            return users.Where(u => predicate(u));
+            return users.Where(u => predicate(u))
+                    .Select(u => u.Clone()).ToList();
         }
 
         /// <inheritdoc cref="IStatefulService.SaveState"/>
@@ -156,10 +157,19 @@ namespace UserServiceLibrary
             try
             {
                 users = new HashSet<User>(UserStorage.LoadUsers());
+                NotificateAll();
             }
             catch (Exception ex)
             {
                 throw new CannotLoadStateException("Cannot load state", ex);
+            }
+        }
+
+        private void NotificateAll()
+        {
+            foreach (var user in users)
+            {
+                StartUserAdded(user);
             }
         }
 

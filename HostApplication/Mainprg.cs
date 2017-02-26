@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UserServiceLibrary;
+using UserServiceLibrary.Interfaces;
 using UserStorageLibrary;
 
 namespace HostApplication
@@ -37,29 +38,50 @@ namespace HostApplication
                     Id = 3
                 },
             };
-
+            
             string storageFilename = 
                 ConfigurationManager.AppSettings["storageFilename"];
+            int slavesCount = int.Parse(ConfigurationManager.AppSettings["slavesCount"]);
 
             UserStorage userStorage = new UserStorage(storageFilename);
-            UserService userService = new UserService();
-            userService.UserStorage = userStorage;
+            MasterUserService masterUserService = new MasterUserService();
+            masterUserService.UserStorage = userStorage;
 
-            foreach (var user in usersEnumeration)
+            ISlaveService[] slaves = new SlaveUserService[slavesCount];
+            for (int i = 0; i < slaves.Length; i++)
             {
-                userService.Add(user);
+                slaves[i] = new SlaveUserService();
+                masterUserService.UserRemoved += slaves[i].UserRemovedHandler;
+                masterUserService.UserAdded += slaves[i].UserAddedHandler;
             }
 
-            userService.SaveState();
+            //foreach (var user in usersEnumeration)
+            //{
+            //    masterUserService.Add(user);
+            //}
 
-            userService = new UserService();
-            userService.UserStorage = userStorage;
-            userService.LoadSavedState();
+            //masterUserService.SaveState();
 
-            IEnumerable<User> loadedUsers = userService.Search(u => true);
+            //masterUserService = new MasterUserService();
+            //masterUserService.UserStorage = userStorage;
+            masterUserService.LoadSavedState();
+
+            IEnumerable<User> loadedUsers = masterUserService.Search(u => true);
             foreach (var user in loadedUsers)
             {
                 Console.WriteLine(user);
+            }
+
+            Console.WriteLine("From slaves: ");
+            for (int i = 0; i < slaves.Length; i++)
+            {
+                Console.WriteLine($"\nSlave {i}:");
+                foreach (var user in slaves[i].Search(u => true))
+                {
+                    Console.WriteLine(user);
+                }
+
+                masterUserService.Remove(usersEnumeration.Skip(i).First());
             }
         }
     }

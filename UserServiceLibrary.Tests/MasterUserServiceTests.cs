@@ -13,13 +13,13 @@ using UserServiceLibrary.Interfaces;
 namespace UserServiceLibrary.Tests
 {
     [TestFixture]
-    public class UserServiceTests
+    public class MasterUserServiceTests
     {
         [Test]
         public void Add_NotFullyInitializedUser_ExceptionThrown()
         {
             // Arrange
-            IUserService service = new UserService();
+            IUserService service = new MasterUserService();
             User user = new User();
 
             // Act-Assert
@@ -30,7 +30,7 @@ namespace UserServiceLibrary.Tests
         public void Add_UserTwice_ExceptionThrown()
         {
             // Arrange
-            IUserService service = new UserService();
+            IUserService service = new MasterUserService();
             User user = new User
             {
                 DateOfBirth = DateTime.Now,
@@ -51,7 +51,7 @@ namespace UserServiceLibrary.Tests
         public void Add_TwoSimilarUsersWithEqualityComparer_ExceptionThrown()
         {
             // Arrange
-            IUserService service = new UserService(null, new UserEqualityComparer());
+            IUserService service = new MasterUserService(null, new UserEqualityComparer());
             User user1 = new User
             {
                 DateOfBirth = DateTime.Now,
@@ -78,7 +78,7 @@ namespace UserServiceLibrary.Tests
         public void Add_NullUser_ExceptionThrown()
         {
             // Arrange
-            IUserService service = new UserService();
+            IUserService service = new MasterUserService();
             
             // Act-Assert
             Assert.Throws<ArgumentNullException>(
@@ -92,7 +92,7 @@ namespace UserServiceLibrary.Tests
         public void Add_ValidUser_NothingHappend()
         {
             // Arrange
-            IUserService service = new UserService();
+            IUserService service = new MasterUserService();
             User user = new User
             {
                 DateOfBirth = DateTime.Now,
@@ -108,7 +108,7 @@ namespace UserServiceLibrary.Tests
         public void Remove_ExistingJustAddedUser_NothingHappend()
         {
             // Arrange
-            IUserService service = new UserService();
+            IUserService service = new MasterUserService();
             User user = new User
             {
                 DateOfBirth = DateTime.Now,
@@ -129,7 +129,7 @@ namespace UserServiceLibrary.Tests
         public void Remove_ExistingSimilarUser_NothingHappend()
         {
             // Arrange
-            IUserService service = new UserService(null, new UserEqualityComparer());
+            IUserService service = new MasterUserService(null, new UserEqualityComparer());
             User user1 = new User
             {
                 DateOfBirth = DateTime.Now,
@@ -158,7 +158,7 @@ namespace UserServiceLibrary.Tests
         public void Remove_NullUser_ExceptionThrown()
         {
             // Arrange
-            IUserService service = new UserService();
+            IUserService service = new MasterUserService();
 
             // Act-Assert
             Assert.Throws<ArgumentNullException>(() => service.Remove(null));
@@ -168,7 +168,7 @@ namespace UserServiceLibrary.Tests
         public void Remove_NotExistingUser_ExceptionThrown()
         {
             // Arrange
-            IUserService service = new UserService();
+            IUserService service = new MasterUserService();
             User user = new User
             {
                 DateOfBirth = DateTime.Now,
@@ -184,7 +184,7 @@ namespace UserServiceLibrary.Tests
         public void Search_NullPredicate_ExceptionThrown()
         {
             // Arrange
-            IUserService service = new UserService();
+            IUserService service = new MasterUserService();
 
             // Act-Assert
             Assert.Throws<ArgumentNullException>(() => service.Search(null));
@@ -194,7 +194,7 @@ namespace UserServiceLibrary.Tests
         public void Search_EmptyService_EmptyEnumerationExpected()
         {
             // Arrange
-            IUserService service = new UserService();
+            IUserService service = new MasterUserService();
 
             // Act
             IEnumerable<User> actual = service.Search(user => true);
@@ -207,7 +207,7 @@ namespace UserServiceLibrary.Tests
         public void Search_ByFirstnameServiceHasSeveralUsers_EnumerationWithSeveralUsersExpected()
         {
             // Arrange
-            IUserService service = new UserService();
+            IUserService service = new MasterUserService();
             User[] users =
             {
                 new User { Firstname = "Denis", Secondname = "Shilo", DateOfBirth = DateTime.Now },
