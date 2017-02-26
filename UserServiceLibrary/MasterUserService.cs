@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NLog;
 using UserServiceLibrary.Exceptions;
 using UserServiceLibrary.Exceptions.StatefulService;
 using UserServiceLibrary.Exceptions.UserService;
@@ -16,6 +17,7 @@ namespace UserServiceLibrary
     /// </summary>
     public class MasterUserService : MarshalByRefObject, IMasterService, IStatefulService
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
         private IEqualityComparer<User> userEqualityComparer;
         private Func<int> uniqueIdGenerator;
         private ICollection<User> users;
@@ -35,6 +37,8 @@ namespace UserServiceLibrary
             IEqualityComparer<User> userEqualityComparer = null,
             IUserStorage userStorage = null)
         {
+            logger.Log(LogLevel.Trace, $"{nameof(MasterUserService)} ctor started");
+
             if (uniqueIdGenerator == null)
             {
                 int counter = 1;
@@ -49,6 +53,7 @@ namespace UserServiceLibrary
                 ?? EqualityComparer<User>.Default;
             UserStorage = userStorage;
             users = new HashSet<User>();
+            logger.Log(LogLevel.Trace, $"{nameof(MasterUserService)} ctor finished");
         }
 
         public event EventHandler<UserEventArgs> UserAdded;
@@ -64,6 +69,7 @@ namespace UserServiceLibrary
         /// <inheritdoc cref="IUserService.Add"/>
         public void Add(User user)
         {
+            logger.Log(LogLevel.Trace, $"{user} adding...");
             if (user == null)
             {
                 throw new ArgumentNullException(
@@ -87,12 +93,14 @@ namespace UserServiceLibrary
 
             User userToAdd = user.Clone();
             users.Add(userToAdd);
+            logger.Log(LogLevel.Trace, $"{user} added");
             StartUserAdded(userToAdd);
         }
 
         /// <inheritdoc cref="IUserService.Remove"/>
         public void Remove(User user)
         {
+            logger.Log(LogLevel.Trace, $"{user} removing...");
             if (user == null)
             {
                 throw new ArgumentNullException(
@@ -108,12 +116,14 @@ namespace UserServiceLibrary
             }
 
             users.Remove(removingUser);
+            logger.Log(LogLevel.Trace, $"{user} removed");
             StartUserRemoved(removingUser);
         }
 
         /// <inheritdoc cref="IUserService.Search"/>
         public IEnumerable<User> Search(Predicate<User> predicate)
         {
+            logger.Log(LogLevel.Trace, $"Searching user by predicate...");
             if (predicate == null)
             {
                 throw new ArgumentNullException(
@@ -129,6 +139,7 @@ namespace UserServiceLibrary
         /// <see cref="IUserStorage"/> is not provided</exception>
         public void SaveState()
         {
+            logger.Log(LogLevel.Trace, "Saving state...");
             if (UserStorage == null)
             {
                 throw new StatefulServiceException("User storage is not provided");
@@ -142,6 +153,8 @@ namespace UserServiceLibrary
             {
                 throw new CannotSaveStateException("Cannot save state", ex);
             }
+
+            logger.Log(LogLevel.Trace, "State saved.");
         }
 
         /// <inheritdoc cref="IStatefulService.LoadSavedState"/>
@@ -149,6 +162,7 @@ namespace UserServiceLibrary
         /// <see cref="IUserStorage"/> is not provided</exception>
         public void LoadSavedState()
         {
+            logger.Log(LogLevel.Trace, "Loading state...");
             if (UserStorage == null)
             {
                 throw new StatefulServiceException("User storage is not provided");
@@ -157,16 +171,19 @@ namespace UserServiceLibrary
             try
             {
                 users = new HashSet<User>(UserStorage.LoadUsers());
-                NotificateAll();
+                SendUsersLoadedNotifications();
             }
             catch (Exception ex)
             {
                 throw new CannotLoadStateException("Cannot load state", ex);
             }
+
+            logger.Log(LogLevel.Trace, "State loaded...");
         }
 
-        private void NotificateAll()
+        private void SendUsersLoadedNotifications()
         {
+            logger.Log(LogLevel.Trace, "Notificating all subscribers...");
             foreach (var user in users)
             {
                 StartUserAdded(user);

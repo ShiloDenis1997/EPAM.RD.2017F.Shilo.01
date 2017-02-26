@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using NLog;
 using UserServiceLibrary;
 using UserServiceLibrary.Interfaces;
 using UserStorageLibrary;
@@ -13,65 +14,81 @@ namespace HostApplication
 {
     public class Mainprg
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         public static void Main(string[] args)
         {
             DemonstrateWithDomains();
-            //DemonstrateWithoutDomains();
+
+            // DemonstrateWithoutDomains();
         }
 
         public static void DemonstrateWithDomains()
         {
-            string storageFilename =
-                ConfigurationManager.AppSettings["storageFilename"];
-            int slavesCount = int.Parse(ConfigurationManager.AppSettings["slavesCount"]);
-
-            AppDomain masterDomain = AppDomain.CreateDomain("Master domain", null, null);
-            MasterUserService masterService = (MasterUserService) masterDomain.CreateInstanceAndUnwrap(
-                "UserServiceLibrary", "UserServiceLibrary.MasterUserService", 
-                false, BindingFlags.CreateInstance,
-                null, new object[] {null, null, null}, null, null);
-
-            AppDomain[] slaveDomains = new AppDomain[slavesCount];
-            SlaveUserService[] slaveServices = new SlaveUserService[slavesCount];
-
-            for (int i = 0; i < slavesCount; i++)
+            try
             {
-                slaveDomains[i] = AppDomain.CreateDomain(
-                    $"Slave domain #{i}", null, null);
-                slaveServices[i] = (SlaveUserService) slaveDomains[i].CreateInstanceAndUnwrap(
-                    "UserServiceLibrary", "UserServiceLibrary.SlaveUserService");
-                masterService.UserAdded += slaveServices[i].UserAddedHandler;
-                masterService.UserRemoved += slaveServices[i].UserRemovedHandler;
-            }
+                string storageFilename =
+                    ConfigurationManager.AppSettings["storageFilename"];
+                int slavesCount = int.Parse(ConfigurationManager.AppSettings["slavesCount"]);
 
-            UserStorage userStorage = new UserStorage(storageFilename);
-            masterService.UserStorage = userStorage;
-            masterService.LoadSavedState();
-            
-            IEnumerable<User> loadedUsers = masterService.Search(u => true);
-            foreach (var user in loadedUsers)
-            {
-                Console.WriteLine(user);
-            }
+                AppDomain masterDomain = AppDomain.CreateDomain("Master domain", null, null);
+                MasterUserService masterService = (MasterUserService)masterDomain.CreateInstanceAndUnwrap(
+                    "UserServiceLibrary", 
+                    "UserServiceLibrary.MasterUserService",
+                    false, 
+                    BindingFlags.CreateInstance,
+                    null,
+                    new object[] { null, null, null }, 
+                    null, 
+                    null);
 
-            Console.WriteLine("From slaves: ");
-            for (int i = 0; i < slaveServices.Length; i++)
-            {
-                Console.WriteLine($"\nSlave {i}:");
-                foreach (var user in slaveServices[i].Search(u => true))
+                AppDomain[] slaveDomains = new AppDomain[slavesCount];
+                SlaveUserService[] slaveServices = new SlaveUserService[slavesCount];
+
+                for (int i = 0; i < slavesCount; i++)
+                {
+                    slaveDomains[i] = AppDomain.CreateDomain(
+                        $"Slave domain #{i}", null, null);
+                    slaveServices[i] = (SlaveUserService)slaveDomains[i].CreateInstanceAndUnwrap(
+                        "UserServiceLibrary", "UserServiceLibrary.SlaveUserService");
+                    masterService.UserAdded += slaveServices[i].UserAddedHandler;
+                    masterService.UserRemoved += slaveServices[i].UserRemovedHandler;
+                }
+
+                UserStorage userStorage = new UserStorage(storageFilename);
+                masterService.UserStorage = userStorage;
+                masterService.LoadSavedState();
+
+                IEnumerable<User> loadedUsers = masterService.Search(u => true);
+                foreach (var user in loadedUsers)
                 {
                     Console.WriteLine(user);
                 }
 
-                masterService.Remove(masterService.Search(u => true).First());
-            }
+                Console.WriteLine("From slaves: ");
+                for (int i = 0; i < slaveServices.Length; i++)
+                {
+                    Console.WriteLine($"\nSlave {i}:");
+                    foreach (var user in slaveServices[i].Search(u => true))
+                    {
+                        Console.WriteLine(user);
+                    }
 
-            foreach (var domain in slaveDomains)
+                    masterService.Remove(masterService.Search(u => true).First());
+                }
+
+                foreach (var domain in slaveDomains)
+                {
+                    AppDomain.Unload(domain);
+                }
+
+                AppDomain.Unload(masterDomain);
+            }
+            catch (Exception ex)
             {
-                AppDomain.Unload(domain);
+                logger.Log(LogLevel.Fatal, ex);
+                LogManager.Flush();
             }
-
-            AppDomain.Unload(masterDomain);
         }
 
         public static void DemonstrateWithoutDomains()
@@ -117,15 +134,15 @@ namespace HostApplication
                 masterUserService.UserAdded += slaves[i].UserAddedHandler;
             }
 
-            //foreach (var user in usersEnumeration)
-            //{
-            //    masterUserService.Add(user);
-            //}
-
-            //masterUserService.SaveState();
-
-            //masterUserService = new MasterUserService();
-            //masterUserService.UserStorage = userStorage;
+            // foreach (var user in usersEnumeration)
+            // {
+            //     masterUserService.Add(user);
+            // }
+               
+            // masterUserService.SaveState();
+               
+            // masterUserService = new MasterUserService();
+            // masterUserService.UserStorage = userStorage;
             masterUserService.LoadSavedState();
 
             IEnumerable<User> loadedUsers = masterUserService.Search(u => true);
