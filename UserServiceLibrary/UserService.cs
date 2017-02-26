@@ -14,7 +14,7 @@ namespace UserServiceLibrary
     /// Implementation of <see cref="IUserService"/> to provide a simple
     /// functionallity of user service
     /// </summary>
-    public class UserService : IUserService, IStatefulService
+    public class UserService : IMasterService, IStatefulService
     {
         private IEqualityComparer<User> userEqualityComparer;
         private Func<int> uniqueIdGenerator;
@@ -45,10 +45,15 @@ namespace UserServiceLibrary
                 this.uniqueIdGenerator = uniqueIdGenerator;
             }
             
-            this.userEqualityComparer = userEqualityComparer ?? EqualityComparer<User>.Default;
+            this.userEqualityComparer = userEqualityComparer 
+                ?? EqualityComparer<User>.Default;
             UserStorage = userStorage;
             users = new HashSet<User>();
         }
+
+        public event EventHandler<UserEventArgs> UserAdded;
+
+        public event EventHandler<UserEventArgs> UserRemoved;
 
         /// <summary>
         /// If null, <see cref="LoadSavedState"/> and <see cref="SaveState"/>
@@ -79,7 +84,10 @@ namespace UserServiceLibrary
             }
 
             user.Id = uniqueIdGenerator();
-            users.Add(user);
+
+            User userToAdd = user.Clone();
+            users.Add(userToAdd);
+            StartUserAdded(userToAdd);
         }
 
         /// <inheritdoc cref="IUserService.Remove"/>
@@ -100,6 +108,7 @@ namespace UserServiceLibrary
             }
 
             users.Remove(removingUser);
+            StartUserRemoved(removingUser);
         }
 
         /// <inheritdoc cref="IUserService.Search"/>
@@ -152,6 +161,16 @@ namespace UserServiceLibrary
             {
                 throw new CannotLoadStateException("Cannot load state", ex);
             }
+        }
+
+        private void StartUserAdded(User user)
+        {
+            UserAdded?.Invoke(this, new UserEventArgs { User = user });
+        }
+
+        private void StartUserRemoved(User user)
+        {
+            UserRemoved?.Invoke(this, new UserEventArgs { User = user });
         }
     }
 }

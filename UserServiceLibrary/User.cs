@@ -9,7 +9,7 @@ namespace UserServiceLibrary
     /// <summary>
     /// Contains data about user
     /// </summary>
-    public class User : IEquatable<User>
+    public class User : IEquatable<User>, ICloneable
     {
         /// <summary>
         /// Unique user id
@@ -92,5 +92,21 @@ namespace UserServiceLibrary
         }
 
         public override string ToString() => $"{Firstname} {Secondname}";
+
+        public User Clone()
+        {
+            return new User
+            {
+                DateOfBirth = this.DateOfBirth,
+                Firstname = this.Firstname,
+                Id = this.Id,
+                Secondname = this.Secondname,
+            };
+        }
+
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
     }
 }
