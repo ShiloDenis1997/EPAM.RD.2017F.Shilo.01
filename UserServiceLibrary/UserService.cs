@@ -54,7 +54,7 @@ namespace UserServiceLibrary
         /// If null, <see cref="LoadSavedState"/> and <see cref="SaveState"/>
         /// will throw <see cref="StatefulServiceException"/>
         /// </summary>
-        private IUserStorage UserStorage { get; set; }
+        public IUserStorage UserStorage { get; set; }
 
         /// <inheritdoc cref="IUserService.Add"/>
         public void Add(User user)

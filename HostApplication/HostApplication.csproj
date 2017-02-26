@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6553DB6A-4F8F-4444-A291-0EFD5C8D9139}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{0E433056-ED88-490E-8749-991423F6788E}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UserServiceLibrary</RootNamespace>
-    <AssemblyName>UserServiceLibrary</AssemblyName>
+    <RootNamespace>HostApplication</RootNamespace>
+    <AssemblyName>HostApplication</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -20,10 +22,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,6 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -42,24 +44,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\StatefulService\CannotLoadStateException.cs" />
-    <Compile Include="Exceptions\StatefulService\CannotSaveStateException.cs" />
-    <Compile Include="Exceptions\StatefulService\StatefulServiceException.cs" />
-    <Compile Include="Exceptions\UserService\NotInitializedUserException.cs" />
-    <Compile Include="Exceptions\UserService\UserDoesNotExistException.cs" />
-    <Compile Include="Exceptions\UserService\UserServiceException.cs" />
-    <Compile Include="Exceptions\UserStorage\UserStorageException.cs" />
-    <Compile Include="Interfaces\IMasterService.cs" />
-    <Compile Include="Interfaces\ISlaveService.cs" />
-    <Compile Include="Interfaces\IStatefulService.cs" />
-    <Compile Include="Interfaces\IUserService.cs" />
-    <Compile Include="Interfaces\IUserStorage.cs" />
-    <Compile Include="User.cs" />
-    <Compile Include="Exceptions\UserService\UserAlreadyExistsException.cs" />
-    <Compile Include="UserService.cs" />
+    <Compile Include="Mainprg.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UserServiceLibrary\UserServiceLibrary.csproj">
+      <Project>{6553db6a-4f8f-4444-a291-0efd5c8d9139}</Project>
+      <Name>UserServiceLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UserStorageLibrary\UserStorageLibrary.csproj">
+      <Project>{7801d158-b80c-412b-9ecd-a50d1311faf4}</Project>
+      <Name>UserStorageLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

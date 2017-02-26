@@ -13,6 +13,13 @@ namespace UserStorageLibrary
 {
     public class UserStorage : IUserStorage
     {
+        /// <summary>
+        /// Creates an instance of user storage with
+        /// specific filename
+        /// </summary>
+        /// <param name="filename">name of the storage file</param>
+        /// <exception cref="ArgumentException">Throws if 
+        /// <paramref name="filename"/> is null, empty or whitespace</exception>
         public UserStorage(string filename)
         {
             if (string.IsNullOrWhiteSpace(filename))

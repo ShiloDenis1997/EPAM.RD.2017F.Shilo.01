@@ -90,5 +90,7 @@ namespace UserServiceLibrary
             var hashCode = Id;
             return hashCode;
         }
+
+        public override string ToString() => $"{Firstname} {Secondname}";
     }
 }
