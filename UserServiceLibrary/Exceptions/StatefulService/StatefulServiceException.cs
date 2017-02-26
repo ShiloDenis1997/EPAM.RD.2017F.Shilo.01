@@ -12,6 +12,7 @@ namespace UserServiceLibrary.Exceptions.StatefulService
     /// Exception that can be thrown by <see cref="IStatefulService"/>
     /// implementations
     /// </summary>
+    [Serializable]
     public class StatefulServiceException : Exception
     {
         public StatefulServiceException()

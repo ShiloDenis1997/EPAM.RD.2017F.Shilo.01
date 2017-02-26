@@ -47,7 +47,7 @@ namespace HostApplication
             UserStorage userStorage = new UserStorage(storageFilename);
             masterService.UserStorage = userStorage;
             masterService.LoadSavedState();
-
+            
             IEnumerable<User> loadedUsers = masterService.Search(u => true);
             foreach (var user in loadedUsers)
             {

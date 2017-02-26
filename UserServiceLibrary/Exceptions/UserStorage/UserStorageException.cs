@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace UserServiceLibrary.Exceptions.UserStorage
 {
+    [Serializable]
     public class UserStorageException : Exception
     {
         public UserStorageException()

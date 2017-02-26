@@ -6,6 +6,7 @@ namespace UserServiceLibrary.Exceptions.UserService
     /// <summary>
     /// Root of the exception hierarcy for user services
     /// </summary>
+    [Serializable]
     public class UserServiceException : Exception
     {
         public UserServiceException()

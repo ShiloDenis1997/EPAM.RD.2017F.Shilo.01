@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 
 namespace UserServiceLibrary.Exceptions.UserService
 {
+    [Serializable]
     public class NotInitializedUserException : UserServiceException
     {
         public NotInitializedUserException()

@@ -8,6 +8,7 @@ using UserServiceLibrary.Exceptions.UserStorage;
 
 namespace UserStorageLibrary.Exceptions
 {
+    [Serializable]
     public class CannotDeserializeException : UserStorageException
     {
         public CannotDeserializeException()
