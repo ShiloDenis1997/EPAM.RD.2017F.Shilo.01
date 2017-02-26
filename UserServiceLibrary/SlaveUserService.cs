@@ -7,7 +7,7 @@ using UserServiceLibrary.Interfaces;
 
 namespace UserServiceLibrary
 {
-    public class SlaveUserService : ISlaveService
+    public class SlaveUserService : MarshalByRefObject, ISlaveService
     {
         private ICollection<User> users;
         

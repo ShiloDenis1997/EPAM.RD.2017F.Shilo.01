@@ -14,7 +14,7 @@ namespace UserServiceLibrary
     /// Implementation of <see cref="IUserService"/> to provide a simple
     /// functionallity of user service
     /// </summary>
-    public class MasterUserService : IMasterService, IStatefulService
+    public class MasterUserService : MarshalByRefObject, IMasterService, IStatefulService
     {
         private IEqualityComparer<User> userEqualityComparer;
         private Func<int> uniqueIdGenerator;

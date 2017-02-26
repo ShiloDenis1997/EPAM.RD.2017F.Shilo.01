@@ -9,6 +9,7 @@ namespace UserServiceLibrary
     /// <summary>
     /// Contains data about user
     /// </summary>
+    [Serializable]
     public class User : IEquatable<User>, ICloneable
     {
         /// <summary>

@@ -13,6 +13,7 @@ namespace UserServiceLibrary.Interfaces
         event EventHandler<UserEventArgs> UserRemoved;
     }
 
+    [Serializable]
     public class UserEventArgs : EventArgs
     {
         public User User { get; set; }

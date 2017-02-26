@@ -11,6 +11,7 @@ using UserStorageLibrary.Exceptions;
 
 namespace UserStorageLibrary
 {
+    [Serializable]
     public class UserStorage : IUserStorage
     {
         /// <summary>
