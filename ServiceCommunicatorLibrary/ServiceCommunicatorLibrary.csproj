@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0E433056-ED88-490E-8749-991423F6788E}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{9A83053F-D904-491C-B83B-A206A68EA17E}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HostApplication</RootNamespace>
-    <AssemblyName>HostApplication</AssemblyName>
+    <RootNamespace>ServiceCommunicatorLibrary</RootNamespace>
+    <AssemblyName>ServiceCommunicatorLibrary</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -38,7 +35,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -48,32 +44,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Mainprg.cs" />
+    <Compile Include="MasterServiceCommunicator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SlaveServiceCommunicator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <Content Include="NLog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="NLog.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ServiceCommunicatorLibrary\ServiceCommunicatorLibrary.csproj">
-      <Project>{9a83053f-d904-491c-b83b-a206a68ea17e}</Project>
-      <Name>ServiceCommunicatorLibrary</Name>
-    </ProjectReference>
     <ProjectReference Include="..\UserServiceLibrary\UserServiceLibrary.csproj">
       <Project>{6553db6a-4f8f-4444-a291-0efd5c8d9139}</Project>
       <Name>UserServiceLibrary</Name>
     </ProjectReference>
-    <ProjectReference Include="..\UserStorageLibrary\UserStorageLibrary.csproj">
-      <Project>{7801d158-b80c-412b-9ecd-a50d1311faf4}</Project>
-      <Name>UserStorageLibrary</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

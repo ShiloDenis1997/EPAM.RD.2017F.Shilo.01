@@ -22,6 +22,8 @@ namespace UserServiceLibrary
         private Func<int> uniqueIdGenerator;
         private ICollection<User> users;
 
+        private object usersLockObject = new object();
+
         /// <summary>
         /// Constructs an instance of <see cref="MasterUserService"/>
         /// </summary>
@@ -92,7 +94,11 @@ namespace UserServiceLibrary
             user.Id = uniqueIdGenerator();
 
             User userToAdd = user.Clone();
-            users.Add(userToAdd);
+            lock (usersLockObject)
+            {
+                users.Add(userToAdd);
+            }
+
             logger.Log(LogLevel.Trace, $"{user} added");
             StartUserAdded(userToAdd);
         }
@@ -107,15 +113,20 @@ namespace UserServiceLibrary
                     $"{nameof(user)} is null");
             }
 
-            User removingUser = users.FirstOrDefault(
-                u => userEqualityComparer.Equals(u, user));
-            if (removingUser == null)
+            User removingUser;
+            lock (usersLockObject)
             {
-                throw new UserDoesNotExistException(
-                    $"{nameof(user)} does not exists");
+                 removingUser = users.FirstOrDefault(
+                    u => userEqualityComparer.Equals(u, user));
+                if (removingUser == null)
+                {
+                    throw new UserDoesNotExistException(
+                        $"{nameof(user)} does not exists");
+                }
+
+                users.Remove(removingUser);
             }
 
-            users.Remove(removingUser);
             logger.Log(LogLevel.Trace, $"{user} removed");
             StartUserRemoved(removingUser);
         }
@@ -130,8 +141,14 @@ namespace UserServiceLibrary
                     $"{nameof(predicate)} is null");
             }
 
-            return users.Where(u => predicate(u))
+            List<User> usersList;
+            lock (usersLockObject)
+            {
+                usersList = users.Where(u => predicate(u))
                     .Select(u => u.Clone()).ToList();
+            }
+
+            return usersList;
         }
 
         /// <inheritdoc cref="IStatefulService.SaveState"/>
@@ -147,7 +164,13 @@ namespace UserServiceLibrary
 
             try
             {
-                UserStorage.StoreUsers(users);
+                List<User> usersList;
+                lock (usersLockObject)
+                {
+                    usersList = users.ToList();
+                }
+
+                UserStorage.StoreUsers(usersList);
             }
             catch (Exception ex)
             {
@@ -170,7 +193,10 @@ namespace UserServiceLibrary
 
             try
             {
-                users = new HashSet<User>(UserStorage.LoadUsers());
+                lock (usersLockObject)
+                {
+                    users = new HashSet<User>(UserStorage.LoadUsers());
+                }
                 SendUsersLoadedNotifications();
             }
             catch (Exception ex)
@@ -184,7 +210,13 @@ namespace UserServiceLibrary
         private void SendUsersLoadedNotifications()
         {
             logger.Log(LogLevel.Trace, "Notificating all subscribers...");
-            foreach (var user in users)
+            List<User> usersList;
+            lock (usersLockObject)
+            {
+                usersList = users.ToList();
+            }
+
+            foreach (var user in usersList)
             {
                 StartUserAdded(user);
             }

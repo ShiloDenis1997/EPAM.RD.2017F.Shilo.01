@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserStorageLibrary.Tests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HostApplication", "HostApplication\HostApplication.csproj", "{0E433056-ED88-490E-8749-991423F6788E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceCommunicatorLibrary", "ServiceCommunicatorLibrary\ServiceCommunicatorLibrary.csproj", "{9A83053F-D904-491C-B83B-A206A68EA17E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{0E433056-ED88-490E-8749-991423F6788E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E433056-ED88-490E-8749-991423F6788E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E433056-ED88-490E-8749-991423F6788E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A83053F-D904-491C-B83B-A206A68EA17E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A83053F-D904-491C-B83B-A206A68EA17E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A83053F-D904-491C-B83B-A206A68EA17E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A83053F-D904-491C-B83B-A206A68EA17E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

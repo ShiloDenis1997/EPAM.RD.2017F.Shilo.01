@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using NLog;
+using ServiceCommunicatorLibrary;
 using UserServiceLibrary;
 using UserServiceLibrary.Interfaces;
 using UserStorageLibrary;
@@ -18,12 +20,90 @@ namespace HostApplication
 
         public static void Main(string[] args)
         {
-            DemonstrateWithDomains();
+            DemonstrateWithDomainsTcpClient();
+
+            // DemonstrateWithDomainsOnEvents();
 
             // DemonstrateWithoutDomains();
         }
 
-        public static void DemonstrateWithDomains()
+        public static void DemonstrateWithDomainsTcpClient()
+        {
+            try
+            {
+                string storageFilename =
+                    ConfigurationManager.AppSettings["storageFilename"];
+                int slavesCount = int.Parse(ConfigurationManager.AppSettings["slavesCount"]);
+
+                AppDomain masterDomain = AppDomain.CreateDomain("Master domain", null, null);
+                MasterUserService masterService = (MasterUserService)masterDomain.CreateInstanceAndUnwrap(
+                    "UserServiceLibrary",
+                    "UserServiceLibrary.MasterUserService",
+                    false,
+                    BindingFlags.CreateInstance,
+                    null,
+                    new object[] { null, null, null },
+                    null,
+                    null);
+                MasterServiceCommunicator masterServer = new MasterServiceCommunicator(
+                    masterService, IPAddress.Parse("127.0.0.1"), 8080);
+                
+                AppDomain[] slaveDomains = new AppDomain[slavesCount];
+                SlaveUserService[] slaveServices = new SlaveUserService[slavesCount];
+                SlaveServiceCommunicator[] slaveServers = new SlaveServiceCommunicator[slavesCount];
+
+                for (int i = 0; i < slavesCount; i++)
+                {
+                    slaveDomains[i] = AppDomain.CreateDomain(
+                        $"Slave domain #{i}", null, null);
+                    slaveServices[i] = (SlaveUserService)slaveDomains[i].CreateInstanceAndUnwrap(
+                        "UserServiceLibrary", "UserServiceLibrary.SlaveUserService");
+                    slaveServers[i] = new SlaveServiceCommunicator(
+                        slaveServices[i], IPAddress.Parse("127.0.0.1"), 8080);
+                }
+
+                UserStorage userStorage = new UserStorage(storageFilename);
+                masterService.UserStorage = userStorage;
+                masterService.LoadSavedState();
+
+                IEnumerable<User> loadedUsers = masterService.Search(u => true);
+                foreach (var user in loadedUsers)
+                {
+                    Console.WriteLine(user);
+                }
+
+                Console.WriteLine("From slaves: ");
+                for (int i = 0; i < slaveServices.Length; i++)
+                {
+                    Console.WriteLine($"\nSlave {i}:");
+                    foreach (var user in slaveServices[i].Search(u => true))
+                    {
+                        Console.WriteLine(user);
+                    }
+
+                    // masterService.Remove(masterService.Search(u => true).First());
+                }
+
+                foreach (var slaveServer in slaveServers)
+                {
+                    slaveServer.Dispose();
+                }
+
+                foreach (var domain in slaveDomains)
+                {
+                    AppDomain.Unload(domain);
+                }
+
+                AppDomain.Unload(masterDomain);
+            }
+            catch (Exception ex)
+            {
+                logger.Log(LogLevel.Fatal, ex);
+                LogManager.Flush();
+            }
+        }
+
+        public static void DemonstrateWithDomainsOnEvents()
         {
             try
             {
