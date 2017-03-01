@@ -47,7 +47,7 @@ namespace HostApplication
                     null);
                 MasterServiceCommunicator masterServer = new MasterServiceCommunicator(
                     masterService, IPAddress.Parse("127.0.0.1"), 8080);
-                
+
                 AppDomain[] slaveDomains = new AppDomain[slavesCount];
                 SlaveUserService[] slaveServices = new SlaveUserService[slavesCount];
                 SlaveServiceCommunicator[] slaveServers = new SlaveServiceCommunicator[slavesCount];
@@ -66,6 +66,9 @@ namespace HostApplication
                 masterService.UserStorage = userStorage;
                 masterService.LoadSavedState();
 
+                Console.WriteLine("Press any key to see results...");
+                Console.ReadKey(true);
+
                 IEnumerable<User> loadedUsers = masterService.Search(u => true);
                 foreach (var user in loadedUsers)
                 {
@@ -81,7 +84,7 @@ namespace HostApplication
                         Console.WriteLine(user);
                     }
 
-                    // masterService.Remove(masterService.Search(u => true).First());
+                    masterService.Remove(masterService.Search(u => true).First());
                 }
 
                 foreach (var slaveServer in slaveServers)
@@ -89,18 +92,29 @@ namespace HostApplication
                     slaveServer.Dispose();
                 }
 
+                logger.Log(LogLevel.Info, "Slaves disposed");
+
                 foreach (var domain in slaveDomains)
                 {
+                    string friendlyName = domain.FriendlyName;
                     AppDomain.Unload(domain);
+                    logger.Log(LogLevel.Info, $"{friendlyName} unloaded");
                 }
 
+                logger.Log(LogLevel.Info, $"{masterDomain.FriendlyName} unloading...");
                 AppDomain.Unload(masterDomain);
+                logger.Log(LogLevel.Info, "Master domain unloaded");
             }
             catch (Exception ex)
             {
                 logger.Log(LogLevel.Fatal, ex);
+            }
+            finally
+            {
                 LogManager.Flush();
             }
+
+            Console.WriteLine("Hey, is it the end?");
         }
 
         public static void DemonstrateWithDomainsOnEvents()

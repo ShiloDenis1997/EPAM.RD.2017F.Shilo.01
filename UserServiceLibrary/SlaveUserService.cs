@@ -13,6 +13,8 @@ namespace UserServiceLibrary
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
         private ICollection<User> users;
+
+        private object usersLockObject = new object();
         
         public SlaveUserService()
         {
@@ -24,7 +26,13 @@ namespace UserServiceLibrary
         public IEnumerable<User> Search(Predicate<User> predicate)
         {
             logger.Log(LogLevel.Trace, "Searching user by predicate started.");
-            return users.Where(u => predicate(u))
+            List<User> usersList;
+            lock (usersLockObject)
+            {
+                usersList = users.ToList();
+            }
+
+            return usersList.Where(u => predicate(u))
                 .Select(u => u.Clone()).ToList();
         }
 
@@ -37,7 +45,11 @@ namespace UserServiceLibrary
                 throw new ArgumentNullException($"{nameof(args.User)} is null");
             }
 
-            users.Add(userToAdd);
+            lock (usersLockObject)
+            {
+                users.Add(userToAdd);
+            }
+
             logger.Log(LogLevel.Trace, $"Adding of \"{args.User}\" finished");
         }
 
@@ -48,8 +60,12 @@ namespace UserServiceLibrary
             {
                 throw new ArgumentNullException($"{nameof(args.User)} is null");
             }
-            
-            users.Remove(args.User);
+
+            lock (usersLockObject)
+            {
+                users.Remove(args.User);
+            }
+
             logger.Log(LogLevel.Trace, $"Removing of \"{args.User}\" finished");
         }
 

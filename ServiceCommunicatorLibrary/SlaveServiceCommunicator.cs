@@ -73,14 +73,25 @@ namespace ServiceCommunicatorLibrary
             {
                 while (true)
                 {
-                    UserEventArgs userArgs = (UserEventArgs)formatter.Deserialize(stream);
-                    logger.Log(LogLevel.Info, $"{userArgs.User} received");
-                    slaveService.UserAddedHandler(this, userArgs);
+                    CommunicationMessage message = (CommunicationMessage)formatter.Deserialize(stream);
+                    logger.Log(LogLevel.Info, $"{message} received");
+                    if (message.Operation == UserOperation.Add)
+                    {
+                        slaveService.UserAddedHandler(this, new UserEventArgs { User = message.User });
+                    }
+                    else
+                    {
+                        slaveService.UserRemovedHandler(this, new UserEventArgs { User = message.User });
+                    }
                 }
             }
             catch (SocketException ex)
             {
                 logger.Log(LogLevel.Error, ex);
+            }
+            catch (System.IO.IOException ioex)
+            {
+                logger.Log(LogLevel.Trace, ioex);
             }
         }
     }

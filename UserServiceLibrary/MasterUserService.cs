@@ -197,6 +197,7 @@ namespace UserServiceLibrary
                 {
                     users = new HashSet<User>(UserStorage.LoadUsers());
                 }
+
                 SendUsersLoadedNotifications();
             }
             catch (Exception ex)

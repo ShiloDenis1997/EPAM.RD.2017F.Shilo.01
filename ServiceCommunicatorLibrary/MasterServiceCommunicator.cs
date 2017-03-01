@@ -23,7 +23,7 @@ namespace ServiceCommunicatorLibrary
         private BlockingCollection<TcpClient> slaves;
         private TcpListener server;
         private Thread acceptingThread;
-
+        
         public MasterServiceCommunicator(
             IMasterService masterService, IPAddress address, int port)
         {
@@ -46,11 +46,11 @@ namespace ServiceCommunicatorLibrary
             this.masterService = masterService;
             server = new TcpListener(address, port);
             slaves = new BlockingCollection<TcpClient>();
-            SubscribeToMaster();
             acceptingThread = new Thread(ListenForConnections);
             logger.Log(
                 LogLevel.Trace, $"{nameof(MasterServiceCommunicator)} listening thread starting...");
             acceptingThread.Start();
+            SubscribeToMaster();
         }
 
         ~MasterServiceCommunicator()
@@ -80,11 +80,14 @@ namespace ServiceCommunicatorLibrary
 
         private void UserAddedHandler(object sender, UserEventArgs args)
         {
-            SendUserChanged(args);
+            SendUserMessage(
+                new CommunicationMessage { Operation = UserOperation.Add, User = args.User });
         }
 
         private void UserRemovedHandler(object sender, UserEventArgs args)
         {
+            SendUserMessage(
+                new CommunicationMessage { Operation = UserOperation.Remove, User = args.User });
         }
 
         private void ListenForConnections()
@@ -105,20 +108,26 @@ namespace ServiceCommunicatorLibrary
             {
                 logger.Log(LogLevel.Error, ex);
             }
+            catch (System.IO.IOException ioex)
+            {
+                logger.Log(LogLevel.Info, ioex);
+            }
         }
 
-        private Task SendUserChanged(UserEventArgs userArgs)
+        private void SendUserMessage(CommunicationMessage message)
         {
-            logger.Log(LogLevel.Trace, $"{userArgs.User} sending to slaves");
-            return Task.Factory.StartNew(() =>
-            {
-                foreach (TcpClient slave in slaves)
-                {
-                    NetworkStream stream = slave.GetStream();
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    formatter.Serialize(stream, userArgs);
-                }
-            });
+            logger.Log(LogLevel.Trace, $"{message.User} sending to slaves");
+
+            // return Task.Factory.StartNew(() =>
+            // {
+                 foreach (TcpClient slave in slaves)
+                 {
+                     NetworkStream stream = slave.GetStream();
+                     BinaryFormatter formatter = new BinaryFormatter();
+                     formatter.Serialize(stream, message);
+                 }
+
+            // });
         }
     }
 }
