@@ -66,11 +66,11 @@ namespace ServiceCommunicatorLibrary
         private void ListenServer()
         {
             logger.Log(LogLevel.Trace, "Server listener thread started");
-            serverConnection.Connect(hostAddress, hostPort);
-            NetworkStream stream = serverConnection.GetStream();
-            BinaryFormatter formatter = new BinaryFormatter();
             try
             {
+                serverConnection.Connect(hostAddress, hostPort);
+                NetworkStream stream = serverConnection.GetStream();
+                BinaryFormatter formatter = new BinaryFormatter();
                 while (true)
                 {
                     CommunicationMessage message = (CommunicationMessage)formatter.Deserialize(stream);
@@ -89,9 +89,9 @@ namespace ServiceCommunicatorLibrary
             {
                 logger.Log(LogLevel.Error, ex);
             }
-            catch (System.IO.IOException ioex)
+            catch (Exception ex)
             {
-                logger.Log(LogLevel.Trace, ioex);
+                logger.Log(LogLevel.Trace, ex);
             }
         }
     }

@@ -106,11 +106,11 @@ namespace ServiceCommunicatorLibrary
             }
             catch (SocketException ex)
             {
-                logger.Log(LogLevel.Error, ex);
+                logger.Log(LogLevel.Info, ex);
             }
-            catch (System.IO.IOException ioex)
+            catch (Exception ex)
             {
-                logger.Log(LogLevel.Info, ioex);
+                logger.Log(LogLevel.Info, ex);
             }
         }
 

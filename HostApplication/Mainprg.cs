@@ -32,19 +32,28 @@ namespace HostApplication
 
         public static void DemonstrateWithServiceManager()
         {
-            IMasterService masterService = UserServiceManager
-                .Instance.GetConfiguredService(true) as IMasterService;
+            IUserService userService = UserServiceManager
+                .Instance.GetConfiguredService() as IUserService;
+            
+            IMasterService masterService = userService as IMasterService;
             IStatefulService masterState = masterService as IStatefulService;
-            ISlaveService slaveService = UserServiceManager
-                .Instance.GetConfiguredService(false) as ISlaveService;
-            masterState?.LoadSavedState();
-
+            ISlaveService slaveService = userService as ISlaveService;
             Console.WriteLine("Press any key to see results");
             Console.ReadKey(true);
+
+            masterState?.LoadSavedState();
+            if (masterService != null)
+            {
+                Console.WriteLine("It's master service, good bye:)");
+                Console.ReadKey(true);
+                UserServiceManager.Instance.UnloadService();
+                return;
+            }
+
             IEnumerable<User> users = slaveService?.Search(u => true);
             if (users == null)
             {
-                Console.WriteLine("No users in the slae");
+                Console.WriteLine("No users in the slave");
                 return;
             }
 
@@ -53,8 +62,8 @@ namespace HostApplication
                 Console.WriteLine(user);
             }
 
-            UserServiceManager.Instance.UnloadService(true);
-            UserServiceManager.Instance.UnloadService(false);
+            Console.ReadKey(true);
+            UserServiceManager.Instance.UnloadService();
         }
 
         public static void DemonstrateWithDomainsTcpClient()

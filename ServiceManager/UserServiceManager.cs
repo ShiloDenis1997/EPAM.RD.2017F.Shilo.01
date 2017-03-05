@@ -10,8 +10,19 @@ using UserStorageLibrary;
 
 namespace ServiceManager
 {
+    public enum ServiceType
+    {
+        Master = 0,
+        Slave = 1    
+    }
+
     public class UserServiceManager
     {
+        /// <summary>
+        /// Lazy instance of <see cref="UserServiceManager"/>
+        /// </summary>
+        /// <exception cref="UnrecognizedServiceTypeException">When service type in 
+        /// configs is unrecognized</exception>
         private static readonly Lazy<UserServiceManager> InstanceLazy = 
             new Lazy<UserServiceManager>(() => new UserServiceManager(), true);
 
@@ -20,17 +31,39 @@ namespace ServiceManager
         private MasterServiceCommunicator masterCommunicator;
         private SlaveServiceCommunicator slaveCommunicator;
 
+        /// <summary>
+        /// Constructs new instance of <see cref="UserServiceManager"/>
+        /// </summary>
+        /// <exception cref="UnrecognizedServiceTypeException">When service type in 
+        /// configs is unrecognized</exception>
         private UserServiceManager()
         {
+            string serviceTypeString = ConfigurationManager.AppSettings["serviceType"];
+            switch (serviceTypeString)
+            {
+                case "Master":
+                    ServiceType = ServiceType.Master;
+                    break;
+                case "Slave":
+                    ServiceType = ServiceType.Slave;
+                    break;
+                default:
+                    throw new UnrecognizedServiceTypeException();
+            }
         }
 
+        /// <summary> Instance of <see cref="UserServiceManager"/></summary>
+        /// <exception cref="UnrecognizedServiceTypeException">When service type in 
+        /// configs is unrecognized</exception>
         public static UserServiceManager Instance => InstanceLazy.Value;
 
-        public IUserService GetConfiguredService(bool isMaster)
+        public ServiceType ServiceType { get; private set; }
+
+        public IUserService GetConfiguredService()
         {
-            switch (isMaster)
+            switch (ServiceType)
             {
-                case true:
+                case ServiceType.Master:
                     string storageFilename = ConfigurationManager.AppSettings["storageFilename"];
 
                     // int slavesCount = int.Parse(ConfigurationManager.AppSettings["slavesCount"]);
@@ -49,7 +82,7 @@ namespace ServiceManager
                     masterCommunicator = new MasterServiceCommunicator(
                         masterService, IPAddress.Parse("127.0.0.1"), 8080);
                     return masterService;
-                case false:
+                case ServiceType.Slave:
                     slaveServiceDomain = AppDomain.CreateDomain(
                         "Slave domain", null, null);
                     SlaveUserService slaveService = (SlaveUserService)slaveServiceDomain.CreateInstanceAndUnwrap(
@@ -58,19 +91,22 @@ namespace ServiceManager
                         slaveService, IPAddress.Parse("127.0.0.1"), 8080);
                     return slaveService;
                 default:
-                    throw new UnrecognizedServiceTypeException(); 
+                    return null;
             }
         }
 
-        public void UnloadService(bool isMaster)
+        public void UnloadService()
         {
-            if (isMaster)
+            switch (ServiceType)
             {
-                AppDomain.Unload(masterServiceDomain);
-            }
-            else
-            {
-                AppDomain.Unload(slaveServiceDomain);
+                case ServiceType.Master:
+                    masterCommunicator?.Dispose();
+                    AppDomain.Unload(masterServiceDomain);
+                    return;
+                case ServiceType.Slave:
+                    slaveCommunicator?.Dispose();
+                    AppDomain.Unload(slaveServiceDomain);
+                    return;
             }
         }
     }
