@@ -32,14 +32,13 @@ namespace UserServiceLibrary
                 usersList = users.ToList();
             }
 
-            return usersList.Where(u => predicate(u))
-                .Select(u => u.Clone()).ToList();
+            return usersList.Where(u => predicate(u)).ToList();
         }
 
         public void UserAddedHandler(object sender, UserEventArgs args)
         {
             logger.Log(LogLevel.Trace, $"Adding of \"{args.User}\" handled");
-            User userToAdd = args.User?.Clone();
+            User userToAdd = args.User;
             if (userToAdd == null)
             {
                 throw new ArgumentNullException($"{nameof(args.User)} is null");
@@ -50,7 +49,7 @@ namespace UserServiceLibrary
                 users.Add(userToAdd);
             }
 
-            logger.Log(LogLevel.Trace, $"Adding of \"{args.User}\" finished");
+            logger.Log(LogLevel.Trace, $"Adding of \"{userToAdd}\" finished");
         }
 
         public void UserRemovedHandler(object sender, UserEventArgs args)

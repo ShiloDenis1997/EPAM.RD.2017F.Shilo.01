@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HostApplication", "HostAppl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceCommunicatorLibrary", "ServiceCommunicatorLibrary\ServiceCommunicatorLibrary.csproj", "{9A83053F-D904-491C-B83B-A206A68EA17E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceManager", "ServiceManager\ServiceManager.csproj", "{F2ECA962-CA0C-49BD-BB06-422993531B7A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{9A83053F-D904-491C-B83B-A206A68EA17E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A83053F-D904-491C-B83B-A206A68EA17E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A83053F-D904-491C-B83B-A206A68EA17E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2ECA962-CA0C-49BD-BB06-422993531B7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2ECA962-CA0C-49BD-BB06-422993531B7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2ECA962-CA0C-49BD-BB06-422993531B7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2ECA962-CA0C-49BD-BB06-422993531B7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

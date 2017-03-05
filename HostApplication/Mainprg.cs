@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NLog;
 using ServiceCommunicatorLibrary;
+using ServiceManager;
 using UserServiceLibrary;
 using UserServiceLibrary.Interfaces;
 using UserStorageLibrary;
@@ -20,11 +21,37 @@ namespace HostApplication
 
         public static void Main(string[] args)
         {
-            DemonstrateWithDomainsTcpClient();
+            DemonstrateWithServiceManager();
+
+            // DemonstrateWithDomainsTcpClient();
 
             // DemonstrateWithDomainsOnEvents();
 
             // DemonstrateWithoutDomains();
+        }
+
+        public static void DemonstrateWithServiceManager()
+        {
+            IMasterService masterService = UserServiceManager
+                .Instance.GetConfiguredService(true) as IMasterService;
+            IStatefulService masterState = masterService as IStatefulService;
+            ISlaveService slaveService = UserServiceManager
+                .Instance.GetConfiguredService(false) as ISlaveService;
+            masterState?.LoadSavedState();
+
+            Console.WriteLine("Press any key to see results");
+            Console.ReadKey(true);
+            IEnumerable<User> users = slaveService?.Search(u => true);
+            if (users == null)
+            {
+                Console.WriteLine("No users in the slae");
+                return;
+            }
+
+            foreach (var user in users)
+            {
+                Console.WriteLine(user);
+            }
         }
 
         public static void DemonstrateWithDomainsTcpClient()

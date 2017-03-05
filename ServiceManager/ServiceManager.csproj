@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0E433056-ED88-490E-8749-991423F6788E}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{F2ECA962-CA0C-49BD-BB06-422993531B7A}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HostApplication</RootNamespace>
-    <AssemblyName>HostApplication</AssemblyName>
+    <RootNamespace>ServiceManager</RootNamespace>
+    <AssemblyName>ServiceManager</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,10 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.4.3\lib\net45\NLog.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -48,27 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Mainprg.cs" />
+    <Compile Include="Exceptions\UnrecognizedServiceTypeException.cs" />
+    <Compile Include="UserServiceManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <Content Include="NLog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="NLog.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ServiceCommunicatorLibrary\ServiceCommunicatorLibrary.csproj">
       <Project>{9a83053f-d904-491c-b83b-a206a68ea17e}</Project>
       <Name>ServiceCommunicatorLibrary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ServiceManager\ServiceManager.csproj">
-      <Project>{f2eca962-ca0c-49bd-bb06-422993531b7a}</Project>
-      <Name>ServiceManager</Name>
     </ProjectReference>
     <ProjectReference Include="..\UserServiceLibrary\UserServiceLibrary.csproj">
       <Project>{6553db6a-4f8f-4444-a291-0efd5c8d9139}</Project>

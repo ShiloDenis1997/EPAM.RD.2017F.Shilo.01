@@ -92,15 +92,14 @@ namespace UserServiceLibrary
             }
 
             user.Id = uniqueIdGenerator();
-
-            User userToAdd = user.Clone();
+            
             lock (usersLockObject)
             {
-                users.Add(userToAdd);
+                users.Add(user);
             }
 
             logger.Log(LogLevel.Trace, $"{user} added");
-            StartUserAdded(userToAdd);
+            StartUserAdded(user);
         }
 
         /// <inheritdoc cref="IUserService.Remove"/>
@@ -144,8 +143,7 @@ namespace UserServiceLibrary
             List<User> usersList;
             lock (usersLockObject)
             {
-                usersList = users.Where(u => predicate(u))
-                    .Select(u => u.Clone()).ToList();
+                usersList = users.Where(u => predicate(u)).ToList();
             }
 
             return usersList;
