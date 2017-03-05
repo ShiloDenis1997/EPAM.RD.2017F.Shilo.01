@@ -61,5 +61,17 @@ namespace ServiceManager
                     throw new UnrecognizedServiceTypeException(); 
             }
         }
+
+        public void UnloadService(bool isMaster)
+        {
+            if (isMaster)
+            {
+                AppDomain.Unload(masterServiceDomain);
+            }
+            else
+            {
+                AppDomain.Unload(slaveServiceDomain);
+            }
+        }
     }
 }

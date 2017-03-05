@@ -52,6 +52,9 @@ namespace HostApplication
             {
                 Console.WriteLine(user);
             }
+
+            UserServiceManager.Instance.UnloadService(true);
+            UserServiceManager.Instance.UnloadService(false);
         }
 
         public static void DemonstrateWithDomainsTcpClient()
