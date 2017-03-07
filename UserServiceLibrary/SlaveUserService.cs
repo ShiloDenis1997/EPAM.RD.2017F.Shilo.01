@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using NLog;
 using UserServiceLibrary.Interfaces;
@@ -14,7 +15,7 @@ namespace UserServiceLibrary
 
         private ICollection<User> users;
 
-        private object usersLockObject = new object();
+        private ReaderWriterLockSlim readWriteLock = new ReaderWriterLockSlim();
         
         public SlaveUserService()
         {
@@ -27,9 +28,14 @@ namespace UserServiceLibrary
         {
             logger.Log(LogLevel.Trace, "Searching user by predicate started.");
             List<User> usersList;
-            lock (usersLockObject)
+            readWriteLock.EnterReadLock();
+            try
             {
                 usersList = users.ToList();
+            }
+            finally
+            {
+                readWriteLock.ExitReadLock();
             }
 
             return usersList.Where(u => predicate(u)).ToList();
@@ -44,9 +50,14 @@ namespace UserServiceLibrary
                 throw new ArgumentNullException($"{nameof(args.User)} is null");
             }
 
-            lock (usersLockObject)
+            readWriteLock.EnterWriteLock();
+            try
             {
                 users.Add(userToAdd);
+            }
+            finally
+            {
+                readWriteLock.ExitWriteLock();
             }
 
             logger.Log(LogLevel.Trace, $"Adding of \"{userToAdd}\" finished");
@@ -60,9 +71,14 @@ namespace UserServiceLibrary
                 throw new ArgumentNullException($"{nameof(args.User)} is null");
             }
 
-            lock (usersLockObject)
+            readWriteLock.EnterWriteLock();
+            try
             {
                 users.Remove(args.User);
+            }
+            finally
+            {
+                readWriteLock.ExitWriteLock();
             }
 
             logger.Log(LogLevel.Trace, $"Removing of \"{args.User}\" finished");

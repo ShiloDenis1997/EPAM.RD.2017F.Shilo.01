@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using NLog;
 using UserServiceLibrary.Exceptions;
@@ -22,7 +23,7 @@ namespace UserServiceLibrary
         private Func<int> uniqueIdGenerator;
         private ICollection<User> users;
 
-        private object usersLockObject = new object();
+        private ReaderWriterLockSlim readWriteLock = new ReaderWriterLockSlim();
 
         /// <summary>
         /// Constructs an instance of <see cref="MasterUserService"/>
@@ -35,7 +36,7 @@ namespace UserServiceLibrary
         /// If not provided, <see cref="SaveState"/> and <see cref="LoadSavedState"/>
         /// will throw an <see cref="StatefulServiceException"/></param>
         public MasterUserService(
-            Func<int> uniqueIdGenerator = null, 
+            Func<int> uniqueIdGenerator = null,
             IEqualityComparer<User> userEqualityComparer = null,
             IUserStorage userStorage = null)
         {
@@ -50,9 +51,9 @@ namespace UserServiceLibrary
             {
                 this.uniqueIdGenerator = uniqueIdGenerator;
             }
-            
-            this.userEqualityComparer = userEqualityComparer 
-                ?? EqualityComparer<User>.Default;
+
+            this.userEqualityComparer = userEqualityComparer
+                                        ?? EqualityComparer<User>.Default;
             UserStorage = userStorage;
             users = new HashSet<User>();
             logger.Log(LogLevel.Trace, $"{nameof(MasterUserService)} ctor finished");
@@ -85,17 +86,21 @@ namespace UserServiceLibrary
                     $"{nameof(user)} is not fully initialized");
             }
 
-            if (users.Contains(user, userEqualityComparer))
+            readWriteLock.EnterWriteLock();
+            try
             {
-                throw new UserAlreadyExistsException(
-                    $"{nameof(user)} is already exists");
-            }
+                if (users.Contains(user, userEqualityComparer))
+                {
+                    throw new UserAlreadyExistsException(
+                        $"{nameof(user)} is already exists");
+                }
 
-            user.Id = uniqueIdGenerator();
-            
-            lock (usersLockObject)
-            {
+                user.Id = uniqueIdGenerator();
                 users.Add(user);
+            }
+            finally
+            {
+                readWriteLock.ExitWriteLock();
             }
 
             logger.Log(LogLevel.Trace, $"{user} added");
@@ -113,9 +118,10 @@ namespace UserServiceLibrary
             }
 
             User removingUser;
-            lock (usersLockObject)
+            readWriteLock.EnterWriteLock();
+            try
             {
-                 removingUser = users.FirstOrDefault(
+                removingUser = users.FirstOrDefault(
                     u => userEqualityComparer.Equals(u, user));
                 if (removingUser == null)
                 {
@@ -124,6 +130,10 @@ namespace UserServiceLibrary
                 }
 
                 users.Remove(removingUser);
+            }
+            finally
+            {
+                readWriteLock.ExitWriteLock();
             }
 
             logger.Log(LogLevel.Trace, $"{user} removed");
@@ -141,11 +151,15 @@ namespace UserServiceLibrary
             }
 
             List<User> usersList;
-            lock (usersLockObject)
+            readWriteLock.EnterReadLock();
+            try
             {
                 usersList = users.Where(u => predicate(u)).ToList();
             }
-
+            finally
+            {
+                readWriteLock.ExitWriteLock();
+            }
             return usersList;
         }
 
@@ -163,9 +177,14 @@ namespace UserServiceLibrary
             try
             {
                 List<User> usersList;
-                lock (usersLockObject)
+                readWriteLock.EnterReadLock();
+                try
                 {
                     usersList = users.ToList();
+                }
+                finally
+                {
+                    readWriteLock.ExitReadLock();
                 }
 
                 UserStorage.StoreUsers(usersList);
@@ -191,9 +210,14 @@ namespace UserServiceLibrary
 
             try
             {
-                lock (usersLockObject)
+                readWriteLock.EnterWriteLock();
+                try
                 {
                     users = new HashSet<User>(UserStorage.LoadUsers());
+                }
+                finally
+                {
+                    readWriteLock.ExitWriteLock();
                 }
 
                 SendUsersLoadedNotifications();
@@ -210,9 +234,14 @@ namespace UserServiceLibrary
         {
             logger.Log(LogLevel.Trace, "Notificating all subscribers...");
             List<User> usersList;
-            lock (usersLockObject)
+            readWriteLock.EnterReadLock();
+            try
             {
                 usersList = users.ToList();
+            }
+            finally
+            {
+                readWriteLock.ExitReadLock();
             }
 
             foreach (var user in usersList)
