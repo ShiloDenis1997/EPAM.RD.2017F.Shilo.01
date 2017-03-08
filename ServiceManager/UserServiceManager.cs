@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Net;
 using System.Reflection;
@@ -80,15 +81,21 @@ namespace ServiceManager
                     UserStorage userStorage = new UserStorage(storageFilename);
                     masterService.UserStorage = userStorage;
                     masterCommunicator = new MasterServiceCommunicator(
-                        masterService, IPAddress.Parse("127.0.0.1"), 8080);
+                        masterService, new List<TcpClientConfiguration>()
+                        {
+                            new TcpClientConfiguration {Address = IPAddress.Parse("127.0.0.1"), Port = 8080},
+                            new TcpClientConfiguration {Address = IPAddress.Parse("127.0.0.1"), Port = 8081},
+                        });
                     return masterService;
                 case ServiceType.Slave:
+                    string slaveAddress = ConfigurationManager.AppSettings["slaveAddress"];
+                    int slavePort = int.Parse(ConfigurationManager.AppSettings["slavePort"]);
                     slaveServiceDomain = AppDomain.CreateDomain(
                         "Slave domain", null, null);
                     SlaveUserService slaveService = (SlaveUserService)slaveServiceDomain.CreateInstanceAndUnwrap(
                         "UserServiceLibrary", "UserServiceLibrary.SlaveUserService");
                     slaveCommunicator = new SlaveServiceCommunicator(
-                        slaveService, IPAddress.Parse("127.0.0.1"), 8080);
+                        slaveService, IPAddress.Parse(slaveAddress), slavePort);
                     return slaveService;
                 default:
                     return null;

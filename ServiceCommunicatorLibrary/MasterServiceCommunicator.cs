@@ -15,47 +15,55 @@ using UserServiceLibrary.Interfaces;
 
 namespace ServiceCommunicatorLibrary
 {
+    public class TcpClientConfiguration
+    {
+        public IPAddress Address { get; set; }
+        public int Port { get; set; }
+    }
+
     public class MasterServiceCommunicator : MarshalByRefObject, IDisposable
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
         private IMasterService masterService;
         private BlockingCollection<TcpClient> slaves;
-        private TcpListener server;
-        private Thread acceptingThread;
-        
+
         public MasterServiceCommunicator(
-            IMasterService masterService, IPAddress address, int port)
+            IMasterService masterService, IEnumerable<TcpClientConfiguration> slavesConfigurations)
         {
             if (masterService == null)
             {
                 throw new ArgumentNullException($"{nameof(masterService)} is null");
             }
 
-            if (address == null)
+            if (slavesConfigurations == null)
             {
-                throw new ArgumentNullException($"{nameof(address)} is null");
-            }
-
-            if (port <= 0)
-            {
-                throw new ArgumentException($"{nameof(port)} must be positive");
+                throw new ArgumentNullException($"{nameof(slavesConfigurations)} is null");
             }
 
             logger.Log(LogLevel.Trace, $"{nameof(MasterServiceCommunicator)} ctor started");
             this.masterService = masterService;
-            server = new TcpListener(address, port);
             slaves = new BlockingCollection<TcpClient>();
-            acceptingThread = new Thread(ListenForConnections);
-            logger.Log(
-                LogLevel.Trace, $"{nameof(MasterServiceCommunicator)} listening thread starting...");
-            acceptingThread.Start();
+            foreach (var slaveConfig in slavesConfigurations)
+            {
+                try
+                {
+                    TcpClient slave = new TcpClient();
+                    slave.Connect(slaveConfig.Address, slaveConfig.Port);
+                    slaves.Add(slave);
+                }
+                catch (Exception ex)
+                {
+                    logger.Log(
+                        LogLevel.Warn, ex,
+                        $"Cannot connect to {slaveConfig.Address}:{slaveConfig.Port}");
+                }
+            }
             SubscribeToMaster();
         }
 
         ~MasterServiceCommunicator()
         {
-            server?.Stop();
             foreach (TcpClient slave in slaves)
             {
                 slave?.Close();
@@ -65,7 +73,6 @@ namespace ServiceCommunicatorLibrary
         public void Dispose()
         {
             GC.SuppressFinalize(this);
-            server?.Stop();
             foreach (TcpClient slave in slaves)
             {
                 slave.Close();
@@ -90,44 +97,16 @@ namespace ServiceCommunicatorLibrary
                 new CommunicationMessage { Operation = UserOperation.Remove, User = args.User });
         }
 
-        private void ListenForConnections()
-        {
-            logger.Log(
-                LogLevel.Trace, $"{nameof(MasterServiceCommunicator)} listening thread started");
-            server.Start();
-            try
-            {
-                while (true)
-                {
-                    TcpClient client = server.AcceptTcpClient();
-                    logger.Log(LogLevel.Info, "New client accepted");
-                    slaves.Add(client);
-                }
-            }
-            catch (SocketException ex)
-            {
-                logger.Log(LogLevel.Info, ex);
-            }
-            catch (Exception ex)
-            {
-                logger.Log(LogLevel.Info, ex);
-            }
-        }
-
         private void SendUserMessage(CommunicationMessage message)
         {
             logger.Log(LogLevel.Trace, $"{message.User} sending to slaves");
-
-            // return Task.Factory.StartNew(() =>
-            // {
-                 foreach (TcpClient slave in slaves)
-                 {
-                     NetworkStream stream = slave.GetStream();
-                     BinaryFormatter formatter = new BinaryFormatter();
-                     formatter.Serialize(stream, message);
-                 }
-
-            // });
+            
+            foreach (TcpClient slave in slaves)
+            {
+                NetworkStream stream = slave.GetStream();
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, message);
+            }
         }
     }
 }

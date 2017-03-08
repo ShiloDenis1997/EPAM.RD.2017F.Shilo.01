@@ -23,8 +23,6 @@ namespace HostApplication
         {
             DemonstrateWithServiceManager();
 
-            // DemonstrateWithDomainsTcpClient();
-
             // DemonstrateWithDomainsOnEvents();
 
             // DemonstrateWithoutDomains();
@@ -64,96 +62,6 @@ namespace HostApplication
 
             Console.ReadKey(true);
             UserServiceManager.Instance.UnloadService();
-        }
-
-        public static void DemonstrateWithDomainsTcpClient()
-        {
-            try
-            {
-                string storageFilename =
-                    ConfigurationManager.AppSettings["storageFilename"];
-                int slavesCount = int.Parse(ConfigurationManager.AppSettings["slavesCount"]);
-
-                AppDomain masterDomain = AppDomain.CreateDomain("Master domain", null, null);
-                MasterUserService masterService = (MasterUserService)masterDomain.CreateInstanceAndUnwrap(
-                    "UserServiceLibrary",
-                    "UserServiceLibrary.MasterUserService",
-                    false,
-                    BindingFlags.CreateInstance,
-                    null,
-                    new object[] { null, null, null },
-                    null,
-                    null);
-                MasterServiceCommunicator masterServer = new MasterServiceCommunicator(
-                    masterService, IPAddress.Parse("127.0.0.1"), 8080);
-
-                AppDomain[] slaveDomains = new AppDomain[slavesCount];
-                SlaveUserService[] slaveServices = new SlaveUserService[slavesCount];
-                SlaveServiceCommunicator[] slaveServers = new SlaveServiceCommunicator[slavesCount];
-
-                for (int i = 0; i < slavesCount; i++)
-                {
-                    slaveDomains[i] = AppDomain.CreateDomain(
-                        $"Slave domain #{i}", null, null);
-                    slaveServices[i] = (SlaveUserService)slaveDomains[i].CreateInstanceAndUnwrap(
-                        "UserServiceLibrary", "UserServiceLibrary.SlaveUserService");
-                    slaveServers[i] = new SlaveServiceCommunicator(
-                        slaveServices[i], IPAddress.Parse("127.0.0.1"), 8080);
-                }
-
-                UserStorage userStorage = new UserStorage(storageFilename);
-                masterService.UserStorage = userStorage;
-                masterService.LoadSavedState();
-
-                Console.WriteLine("Press any key to see results...");
-                Console.ReadKey(true);
-
-                IEnumerable<User> loadedUsers = masterService.Search(u => true);
-                foreach (var user in loadedUsers)
-                {
-                    Console.WriteLine(user);
-                }
-
-                Console.WriteLine("From slaves: ");
-                for (int i = 0; i < slaveServices.Length; i++)
-                {
-                    Console.WriteLine($"\nSlave {i}:");
-                    foreach (var user in slaveServices[i].Search(u => true))
-                    {
-                        Console.WriteLine(user);
-                    }
-
-                    masterService.Remove(masterService.Search(u => true).First());
-                }
-
-                foreach (var slaveServer in slaveServers)
-                {
-                    slaveServer.Dispose();
-                }
-
-                logger.Log(LogLevel.Info, "Slaves disposed");
-
-                foreach (var domain in slaveDomains)
-                {
-                    string friendlyName = domain.FriendlyName;
-                    AppDomain.Unload(domain);
-                    logger.Log(LogLevel.Info, $"{friendlyName} unloaded");
-                }
-
-                logger.Log(LogLevel.Info, $"{masterDomain.FriendlyName} unloading...");
-                AppDomain.Unload(masterDomain);
-                logger.Log(LogLevel.Info, "Master domain unloaded");
-            }
-            catch (Exception ex)
-            {
-                logger.Log(LogLevel.Fatal, ex);
-            }
-            finally
-            {
-                LogManager.Flush();
-            }
-
-            Console.WriteLine("Hey, is it the end?");
         }
 
         public static void DemonstrateWithDomainsOnEvents()

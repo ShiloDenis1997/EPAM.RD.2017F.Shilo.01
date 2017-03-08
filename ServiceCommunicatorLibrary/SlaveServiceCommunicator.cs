@@ -19,37 +19,38 @@ namespace ServiceCommunicatorLibrary
 
         private ISlaveService slaveService;
         private TcpClient serverConnection;
-        private Thread serverListener;
-        private IPAddress hostAddress;
-        private int hostPort;
+        private TcpListener serverListener;
+        private IPAddress slaveAddress;
+        private int slavePort;
+        private Thread serverListenerThread;
 
         public SlaveServiceCommunicator(
-            ISlaveService slaveService, IPAddress hostAddress, int hostPort)
+            ISlaveService slaveService, IPAddress slaveAddress, int slavePort)
         {
             if (slaveService == null)
             {
                 throw new ArgumentNullException($"{nameof(slaveService)} is null");
             }
 
-            if (hostAddress == null)
+            if (slaveAddress == null)
             {
-                throw new ArgumentNullException($"{nameof(hostAddress)} is null");
+                throw new ArgumentNullException($"{nameof(slaveAddress)} is null");
             }
 
-            if (hostPort <= 0)
+            if (slavePort <= 0)
             {
-                throw new ArgumentException($"{nameof(hostPort)} is less or equal to zero");
+                throw new ArgumentException($"{nameof(slavePort)} is less or equal to zero");
             }
 
             logger.Log(LogLevel.Trace, $"{nameof(SlaveServiceCommunicator)} ctor started");
             this.slaveService = slaveService;
-            serverConnection = new TcpClient();
-            this.hostAddress = hostAddress;
-            this.hostPort = hostPort;
-            serverListener = new Thread(ListenServer);
+            this.slaveAddress = slaveAddress;
+            this.slavePort = slavePort;
+            serverListener = new TcpListener(slaveAddress, slavePort);
+            serverListenerThread = new Thread(ListenServer);
             logger.Log(
                 LogLevel.Trace, $"{nameof(SlaveServiceCommunicator)} serverListener thread starting");
-            serverListener.Start();
+            serverListenerThread.Start();
         }
 
         ~SlaveServiceCommunicator()
@@ -68,7 +69,8 @@ namespace ServiceCommunicatorLibrary
             logger.Log(LogLevel.Trace, "Server listener thread started");
             try
             {
-                serverConnection.Connect(hostAddress, hostPort);
+                serverListener.Start();
+                serverConnection = serverListener.AcceptTcpClient();
                 NetworkStream stream = serverConnection.GetStream();
                 BinaryFormatter formatter = new BinaryFormatter();
                 while (true)
