@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
@@ -15,12 +14,6 @@ using UserServiceLibrary.Interfaces;
 
 namespace ServiceCommunicatorLibrary
 {
-    public class TcpClientConfiguration
-    {
-        public IPAddress Address { get; set; }
-        public int Port { get; set; }
-    }
-
     public class MasterServiceCommunicator : MarshalByRefObject, IDisposable
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
@@ -55,10 +48,12 @@ namespace ServiceCommunicatorLibrary
                 catch (Exception ex)
                 {
                     logger.Log(
-                        LogLevel.Warn, ex,
+                        LogLevel.Warn, 
+                        ex,
                         $"Cannot connect to {slaveConfig.Address}:{slaveConfig.Port}");
                 }
             }
+
             SubscribeToMaster();
         }
 

@@ -50,6 +50,10 @@
       <Project>{9a83053f-d904-491c-b83b-a206a68ea17e}</Project>
       <Name>ServiceCommunicatorLibrary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UserServiceConfigSection\UserServiceConfigSection.csproj">
+      <Project>{69978b81-cbe8-41e8-ba85-20ca74c93fd2}</Project>
+      <Name>UserServiceConfigSection</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UserServiceLibrary\UserServiceLibrary.csproj">
       <Project>{6553db6a-4f8f-4444-a291-0efd5c8d9139}</Project>
       <Name>UserServiceLibrary</Name>

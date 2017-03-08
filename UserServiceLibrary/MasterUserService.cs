@@ -160,6 +160,7 @@ namespace UserServiceLibrary
             {
                 readWriteLock.ExitWriteLock();
             }
+
             return usersList;
         }
 

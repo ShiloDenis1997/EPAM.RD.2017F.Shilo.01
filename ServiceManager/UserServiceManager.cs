@@ -5,6 +5,7 @@ using System.Net;
 using System.Reflection;
 using ServiceCommunicatorLibrary;
 using ServiceManager.Exceptions;
+using UserServiceConfigSection;
 using UserServiceLibrary;
 using UserServiceLibrary.Interfaces;
 using UserStorageLibrary;
@@ -32,6 +33,8 @@ namespace ServiceManager
         private MasterServiceCommunicator masterCommunicator;
         private SlaveServiceCommunicator slaveCommunicator;
 
+        private UserServiceSettingsConfigSection userServiceSection;
+
         /// <summary>
         /// Constructs new instance of <see cref="UserServiceManager"/>
         /// </summary>
@@ -39,7 +42,15 @@ namespace ServiceManager
         /// configs is unrecognized</exception>
         private UserServiceManager()
         {
-            string serviceTypeString = ConfigurationManager.AppSettings["serviceType"];
+            UserServiceSettingsConfigSection userServiceSection =
+                        (UserServiceSettingsConfigSection)ConfigurationManager.GetSection("userService");
+            if (userServiceSection == null)
+            {
+                throw new ConfigurationErrorsException("userServiceConfiguration is not provided");
+            }
+
+            this.userServiceSection = userServiceSection;
+            string serviceTypeString = userServiceSection.Server.Type;
             switch (serviceTypeString)
             {
                 case "Master":
@@ -65,10 +76,9 @@ namespace ServiceManager
             switch (ServiceType)
             {
                 case ServiceType.Master:
-                    string storageFilename = ConfigurationManager.AppSettings["storageFilename"];
-
-                    // int slavesCount = int.Parse(ConfigurationManager.AppSettings["slavesCount"]);
-                    masterServiceDomain = AppDomain.CreateDomain("Master domain", null, null);
+                    string storageFilename = userServiceSection.Storage.Filename;
+                    
+                    masterServiceDomain = AppDomain.CreateDomain(userServiceSection.Server.DomainName, null, null);
                     MasterUserService masterService = (MasterUserService)masterServiceDomain.CreateInstanceAndUnwrap(
                         "UserServiceLibrary",
                         "UserServiceLibrary.MasterUserService",
@@ -80,18 +90,25 @@ namespace ServiceManager
                         null);
                     UserStorage userStorage = new UserStorage(storageFilename);
                     masterService.UserStorage = userStorage;
-                    masterCommunicator = new MasterServiceCommunicator(
-                        masterService, new List<TcpClientConfiguration>()
+                    List<TcpClientConfiguration> slavesConfigurations = new List<TcpClientConfiguration>();
+                    foreach (SlaveElement slave in userServiceSection.SlaveItems)
+                    {
+                        slavesConfigurations.Add(new TcpClientConfiguration
                         {
-                            new TcpClientConfiguration {Address = IPAddress.Parse("127.0.0.1"), Port = 8080},
-                            new TcpClientConfiguration {Address = IPAddress.Parse("127.0.0.1"), Port = 8081},
+                            Address = IPAddress.Parse(slave.IpAddress),
+                            Port = int.Parse(slave.Port),
                         });
+                    }
+
+                    masterCommunicator = new MasterServiceCommunicator(
+                        masterService, 
+                        slavesConfigurations);
                     return masterService;
                 case ServiceType.Slave:
-                    string slaveAddress = ConfigurationManager.AppSettings["slaveAddress"];
-                    int slavePort = int.Parse(ConfigurationManager.AppSettings["slavePort"]);
+                    string slaveAddress = userServiceSection.Server.IpAddress;
+                    int slavePort = int.Parse(userServiceSection.Server.Port);
                     slaveServiceDomain = AppDomain.CreateDomain(
-                        "Slave domain", null, null);
+                        userServiceSection.Server.DomainName, null, null);
                     SlaveUserService slaveService = (SlaveUserService)slaveServiceDomain.CreateInstanceAndUnwrap(
                         "UserServiceLibrary", "UserServiceLibrary.SlaveUserService");
                     slaveCommunicator = new SlaveServiceCommunicator(
