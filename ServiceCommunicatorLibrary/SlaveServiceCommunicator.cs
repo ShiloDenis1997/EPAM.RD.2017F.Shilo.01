@@ -22,7 +22,6 @@ namespace ServiceCommunicatorLibrary
         private TcpListener serverListener;
         private IPAddress slaveAddress;
         private int slavePort;
-        private Thread serverListenerThread;
 
         public SlaveServiceCommunicator(
             ISlaveService slaveService, IPAddress slaveAddress, int slavePort)
@@ -47,10 +46,9 @@ namespace ServiceCommunicatorLibrary
             this.slaveAddress = slaveAddress;
             this.slavePort = slavePort;
             serverListener = new TcpListener(slaveAddress, slavePort);
-            serverListenerThread = new Thread(ListenServer);
             logger.Log(
-                LogLevel.Trace, $"{nameof(SlaveServiceCommunicator)} serverListener thread starting");
-            serverListenerThread.Start();
+                LogLevel.Trace, $"{nameof(SlaveServiceCommunicator)} serverListener task starting");
+            ListenServer();
         }
 
         ~SlaveServiceCommunicator()
@@ -63,14 +61,14 @@ namespace ServiceCommunicatorLibrary
             GC.SuppressFinalize(this);
             serverConnection?.Close();
         }
-        
-        private void ListenServer()
+
+        private async void ListenServer()
         {
             logger.Log(LogLevel.Trace, "Server listener thread started");
             try
             {
                 serverListener.Start();
-                serverConnection = serverListener.AcceptTcpClient();
+                serverConnection = await serverListener.AcceptTcpClientAsync();
                 NetworkStream stream = serverConnection.GetStream();
                 BinaryFormatter formatter = new BinaryFormatter();
                 while (true)

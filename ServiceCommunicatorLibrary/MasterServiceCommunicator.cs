@@ -95,12 +95,23 @@ namespace ServiceCommunicatorLibrary
         private void SendUserMessage(CommunicationMessage message)
         {
             logger.Log(LogLevel.Trace, $"{message.User} sending to slaves");
-            
+            BinaryFormatter formatter = new BinaryFormatter();
             foreach (TcpClient slave in slaves)
             {
-                NetworkStream stream = slave.GetStream();
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(stream, message);
+                if (!slave.Connected)
+                {
+                    continue;
+                }
+
+                try
+                {
+                    NetworkStream stream = slave.GetStream();
+                    formatter.Serialize(stream, message);
+                }
+                catch (Exception ex)
+                {
+                    logger.Log(LogLevel.Warn, ex, $"Cannot send message to slave {slave}");
+                }
             }
         }
     }
