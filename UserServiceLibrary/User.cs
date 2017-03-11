@@ -39,25 +39,7 @@ namespace UserServiceLibrary
         /// <returns>true if objects are equal, false another</returns>
         public bool Equals(User other)
         {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-			
-			if (other.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return Id == other.Id && 
-                string.Equals(Firstname, other.Firstname, StringComparison.OrdinalIgnoreCase) && 
-                string.Equals(Secondname, other.Secondname, StringComparison.OrdinalIgnoreCase) && 
-                DateOfBirth.Equals(other.DateOfBirth);
+            return this.Equals((object)other);
         }
 
         /// <summary>
@@ -82,7 +64,10 @@ namespace UserServiceLibrary
                 return false;
             }
 
-            return this.Equals((User)obj);
+            return Id == obj.Id && 
+                string.Equals(Firstname, obj.Firstname, StringComparison.OrdinalIgnoreCase) && 
+                string.Equals(Secondname, obj.Secondname, StringComparison.OrdinalIgnoreCase) && 
+                DateOfBirth.Equals(obj.DateOfBirth);
         }
 
         /// <summary>
