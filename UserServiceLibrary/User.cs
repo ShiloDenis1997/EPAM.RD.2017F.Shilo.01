@@ -49,7 +49,7 @@ namespace UserServiceLibrary
                 return true;
             }
 			
-			if (obj.GetType() != this.GetType())
+			if (other.GetType() != this.GetType())
             {
                 return false;
             }
