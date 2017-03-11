@@ -48,6 +48,11 @@ namespace UserServiceLibrary
             {
                 return true;
             }
+			
+			if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
 
             return Id == other.Id && 
                 string.Equals(Firstname, other.Firstname, StringComparison.OrdinalIgnoreCase) && 
