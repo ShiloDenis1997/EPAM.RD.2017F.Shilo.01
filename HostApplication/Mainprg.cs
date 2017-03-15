@@ -30,36 +30,38 @@ namespace HostApplication
 
         public static void DemonstrateWithServiceManager()
         {
-            IUserService userService = UserServiceManager
-                .Instance.GetConfiguredService() as IUserService;
             
-            IMasterService masterService = userService as IMasterService;
+            IMasterService masterService = UserServiceManager.Instance.GetMasterService();
             IStatefulService masterState = masterService as IStatefulService;
-            ISlaveService slaveService = userService as ISlaveService;
+            IEnumerable<ISlaveService> slaveServices = UserServiceManager.Instance.GetSlaveServices();
+
             Console.WriteLine("Press any key to see results");
             Console.ReadKey(true);
 
-            masterState?.LoadSavedState();
-            if (masterService != null)
+            
+            if (masterState != null)
             {
+                masterState.LoadSavedState();
                 Console.WriteLine("It's master service, good bye:)");
                 Console.ReadKey(true);
                 UserServiceManager.Instance.UnloadService();
                 return;
             }
 
-            IEnumerable<User> users = slaveService?.Search(u => true);
-            if (users == null)
+            foreach (ISlaveService slave in slaveServices)
             {
-                Console.WriteLine("No users in the slave");
-                return;
-            }
+                IEnumerable<User> users = slave?.Search(u => true);
+                if (users == null)
+                {
+                    Console.WriteLine("No users in the slave");
+                    return;
+                }
 
-            foreach (var user in users)
-            {
-                Console.WriteLine(user);
+                foreach (var user in users)
+                {
+                    Console.WriteLine(user);
+                }
             }
-
             Console.ReadKey(true);
             UserServiceManager.Instance.UnloadService();
         }

@@ -9,9 +9,6 @@ namespace UserServiceConfigSection
 {
     public class UserServiceSettingsConfigSection : ConfigurationSection
     {
-        [ConfigurationProperty("slaves")]
-        public SlavesCollection SlaveItems => (SlavesCollection)base["slaves"];
-
         [ConfigurationProperty("server", IsRequired = true)]
         public ServerElement Server => (ServerElement)base["server"];
 

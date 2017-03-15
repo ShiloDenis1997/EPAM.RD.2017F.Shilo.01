@@ -1,3 +1,4 @@
+using System;
 using System.Configuration;
 using System.Net;
 
@@ -11,13 +12,19 @@ namespace UserServiceConfigSection
 
     public class ServerElement : ConfigurationElement
     {
-        [ConfigurationProperty("type", DefaultValue = "", IsKey = false, IsRequired = true)]
+        [ConfigurationProperty("type", DefaultValue = "Master", IsKey = false, IsRequired = true)]
         [RegexStringValidator("(Slave)|(Master)")]
-        public ServiceType Type
+        public string Type
+        {
+            get { return (string)base["type"]; }
+            set { base["type"] = value; }
+        }
+
+        public ServiceType Ttype
         {
             get
             {
-                switch ((string) base["type"])
+                switch (Type)
                 {
                     case "Slave":
                         return ServiceType.Slave;
@@ -27,37 +34,27 @@ namespace UserServiceConfigSection
                         throw new ConfigurationErrorsException("Unknown service type");
                 }
             }
-            set
-            {
-                switch (value)
-                {
-                    case ServiceType.Slave:
-                        base["type"] = "Slave";
-                        break;
-                    case ServiceType.Master:
-                        base["type"] = "Master";
-                        break;
-                    default:
-                        throw new ConfigurationErrorsException("Unknown service type");
-                }
-            }
         }
 
-        [ConfigurationProperty("ipAddress", DefaultValue = "", IsRequired = false)]
+        [ConfigurationProperty("ipAddress", DefaultValue = "127.0.0.1", IsRequired = false)]
         [RegexStringValidator("(2(5[0-5]|[0-4]\\d)|1\\d{2}|[1-9]\\d{0,1})(\\.(2(5[0-5]|[0-4]\\d)|1\\d{2}|[1-9]\\d|\\d)){3}")]
-        public IPAddress IpAddress
+        public string IpAddress
         {
-            get { return IPAddress.Parse((string)base["ipAddress"]); }
-            set { base["ipAddress"] = value.ToString(); }
+            get { return (string)base["ipAddress"]; }
+            set { base["ipAddress"] = value; }
         }
 
-        [ConfigurationProperty("port", DefaultValue = "", IsRequired = false)]
+        public IPAddress TipAddress => IPAddress.Parse(IpAddress);
+
+        [ConfigurationProperty("port", DefaultValue = "8080", IsRequired = false)]
         [RegexStringValidator("^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$")]
-        public int Port
+        public string Port
         {
-            get { return int.Parse((string)base["port"]); }
-            set { base["port"] = value.ToString(); }
+            get { return (string)base["port"]; }
+            set { base["port"] = value; }
         }
+
+        public int Tport => int.Parse(Port);
 
         [ConfigurationProperty("domain", DefaultValue = "UserServiceDomain", IsRequired = false)]
         [StringValidator(MinLength = 1)]
@@ -66,5 +63,8 @@ namespace UserServiceConfigSection
             get { return (string)base["domain"]; }
             set { base["domain"] = value; }
         }
+
+        [ConfigurationProperty("slaves")]
+        public SlavesCollection SlaveItems => (SlavesCollection)base["slaves"];
     }
 }
