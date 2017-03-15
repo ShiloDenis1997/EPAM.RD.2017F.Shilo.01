@@ -1,4 +1,5 @@
 using System.Configuration;
+using System.Net;
 
 namespace UserServiceConfigSection
 {
@@ -12,17 +13,17 @@ namespace UserServiceConfigSection
         }
 
         [ConfigurationProperty("ipAddress", DefaultValue = "", IsKey = false, IsRequired = true)]
-        public string IpAddress
+        public IPAddress IpAddress
         {
-            get { return (string)base["ipAddress"]; }
-            set { base["ipAddress"] = value; }
+            get { return IPAddress.Parse((string)base["ipAddress"]); }
+            set { base["ipAddress"] = value.ToString(); }
         }
 
         [ConfigurationProperty("port", DefaultValue = "", IsKey = false, IsRequired = true)]
-        public string Port
+        public int Port
         {
-            get { return (string)base["port"]; }
-            set { base["port"] = value; }
+            get { return int.Parse((string)base["port"]); }
+            set { base["port"] = value.ToString(); }
         }
     }
 }

@@ -64,10 +64,11 @@ namespace UserServiceLibrary
                 return false;
             }
 
-            return Id == obj.Id && 
-                string.Equals(Firstname, obj.Firstname, StringComparison.OrdinalIgnoreCase) && 
-                string.Equals(Secondname, obj.Secondname, StringComparison.OrdinalIgnoreCase) && 
-                DateOfBirth.Equals(obj.DateOfBirth);
+            User other = obj as User;
+            return Id == other.Id && 
+                string.Equals(Firstname, other.Firstname, StringComparison.OrdinalIgnoreCase) && 
+                string.Equals(Secondname, other.Secondname, StringComparison.OrdinalIgnoreCase) && 
+                DateOfBirth.Equals(other.DateOfBirth);
         }
 
         /// <summary>
