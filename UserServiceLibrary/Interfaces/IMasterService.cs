@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UserServiceLibrary.Interfaces
 {
-    public interface IMasterService : IUserService
+    public interface IMasterService : IUserService, IStatefulService
     {
         event EventHandler<UserEventArgs> UserAdded;
 

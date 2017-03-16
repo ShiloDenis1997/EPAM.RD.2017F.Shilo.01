@@ -10,6 +10,7 @@ using NLog;
 using ServiceCommunicatorLibrary;
 using ServiceManager;
 using UserServiceLibrary;
+using UserServiceLibrary.Exceptions.StatefulService;
 using UserServiceLibrary.Interfaces;
 using UserStorageLibrary;
 
@@ -30,20 +31,29 @@ namespace HostApplication
 
         public static void DemonstrateWithServiceManager()
         {
-            
             IMasterService masterService = UserServiceManager.Instance.GetMasterService();
-            IStatefulService masterState = masterService as IStatefulService;
             IEnumerable<ISlaveService> slaveServices = UserServiceManager.Instance.GetSlaveServices();
 
             Console.WriteLine("Press any key to see results");
             Console.ReadKey(true);
 
-            
-            if (masterState != null)
+            if (masterService != null)
             {
-                masterState.LoadSavedState();
+                try
+                {
+                    masterService.LoadSavedState();
+                }
+                catch (StatefulServiceException ex)
+                {
+                    logger.Log(
+                        LogLevel.Warn,
+                        ex,
+                        "Cannot load state of service, may be it's missing or have a wrong format");
+                }
+
                 Console.WriteLine("It's master service, good bye:)");
                 Console.ReadKey(true);
+                masterService.SaveState();
                 UserServiceManager.Instance.UnloadService();
                 return;
             }
@@ -62,6 +72,7 @@ namespace HostApplication
                     Console.WriteLine(user);
                 }
             }
+
             Console.ReadKey(true);
             UserServiceManager.Instance.UnloadService();
         }

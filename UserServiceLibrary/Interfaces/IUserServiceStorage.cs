@@ -10,22 +10,22 @@ namespace UserServiceLibrary.Interfaces
     /// <summary>
     /// Interface of abstract <see cref="User"/> storage
     /// </summary>
-    public interface IUserStorage
+    public interface IUserServiceStorage
     {
         /// <summary>
-        /// Stores <paramref name="users"/> in some storage
+        /// Stores <paramref name="state"/> in some storage
         /// </summary>
-        /// <param name="users">Users to store</param>
+        /// <param name="state">State of service</param>
         /// <exception cref="UserStorageException">Throws if there are some errors with
-        /// storing users</exception>
-        void StoreUsers(IEnumerable<User> users);
+        /// storing <paramref name="state"/></exception>
+        void StoreServiceState(UserServiceState state);
 
         /// <summary>
-        /// Loads users from some storage
+        /// Loads state from some storage
         /// </summary>
-        /// <returns>Collection of users loaded from some storage</returns>
+        /// <returns>State of the service loaded from some storage</returns>
         /// <exception cref="UserStorageException">Throws if there are some errors
-        /// with loading users</exception>
-        ICollection<User> LoadUsers();
+        /// with loading state</exception>
+        UserServiceState LoadServiceState();
     }
 }

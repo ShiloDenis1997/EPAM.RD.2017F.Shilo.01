@@ -12,7 +12,7 @@ using UserStorageLibrary.Exceptions;
 namespace UserStorageLibrary
 {
     [Serializable]
-    public class UserStorage : IUserStorage
+    public class UserStorage : IUserServiceStorage
     {
         /// <summary>
         /// Creates an instance of user storage with
@@ -34,36 +34,36 @@ namespace UserStorageLibrary
         public string FileName { get; private set; }
 
         /// <summary>
-        /// Stores users in xml-file
+        /// Stores <paramref name="state"/> in xml-file
         /// </summary>
-        /// <param name="users">Users to store in</param>
-        /// <exception cref="CannotSerializeException">Throws if cannot serialize enumerable
-        /// of users in xml-file</exception>
-        public void StoreUsers(IEnumerable<User> users)
+        /// <param name="state">State to store in</param>
+        /// <exception cref="CannotSerializeException">Throws if cannot serialize the
+        /// <paramref name="state"/> in xml-file</exception>
+        public void StoreServiceState(UserServiceState state)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(List<User>));
+            XmlSerializer serializer = new XmlSerializer(typeof(UserServiceState));
             using (FileStream fs = new FileStream(this.FileName, FileMode.Create))
             {
-                serializer.Serialize(fs, users.ToList());
+                serializer.Serialize(fs, state);
             }
         }
 
         /// <summary>
-        /// Loads users from xml-file
+        /// Loads state from xml-file
         /// </summary>
-        /// <returns>Collection of users</returns>
+        /// <returns>Loaded state of the service</returns>
         /// <exception cref="CannotDeserializeException">Throws if cannot deserialize
-        /// users from xml-file</exception>
-        public ICollection<User> LoadUsers()
+        /// state from xml-file</exception>
+        public UserServiceState LoadServiceState()
         {
-            List<User> users;
-            XmlSerializer serializer = new XmlSerializer(typeof(List<User>));
+            UserServiceState state;
+            XmlSerializer serializer = new XmlSerializer(typeof(UserServiceState));
             using (FileStream fs = new FileStream(this.FileName, FileMode.Open))
             {
-                users = (List<User>)serializer.Deserialize(fs);
+                state = (UserServiceState)serializer.Deserialize(fs);
             }
 
-            return users;
+            return state;
         }
     }
 }

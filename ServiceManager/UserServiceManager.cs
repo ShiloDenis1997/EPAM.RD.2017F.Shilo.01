@@ -97,14 +97,12 @@ namespace ServiceManager
                 return null;
             }
             
-            //IPAddress slaveAddress = userServiceSection.Server.IpAddress;
-            //int slavePort = userServiceSection.Server.Port;
             List<ISlaveService> slaveServices = new List<ISlaveService>();
             foreach (SlaveElement slave in userServiceSection.Server.SlaveItems)
             {
                 AppDomain slaveServiceDomain = AppDomain.CreateDomain(slave.DomainName, null, null);
                 slaveServicesDomains.Add(slaveServiceDomain);
-                SlaveUserService slaveService = (SlaveUserService) slaveServiceDomain.CreateInstanceAndUnwrap(
+                SlaveUserService slaveService = (SlaveUserService)slaveServiceDomain.CreateInstanceAndUnwrap(
                     "UserServiceLibrary", "UserServiceLibrary.SlaveUserService");
                 slaveServices.Add(slaveService);
                 slavesCommunicators.Add(new SlaveServiceCommunicator(

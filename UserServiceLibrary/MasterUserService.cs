@@ -16,12 +16,13 @@ namespace UserServiceLibrary
     /// Implementation of <see cref="IUserService"/> to provide a simple
     /// functionallity of user service
     /// </summary>
-    public class MasterUserService : MarshalByRefObject, IMasterService, IStatefulService
+    public class MasterUserService : MarshalByRefObject, IMasterService
     {
         private static Logger logger = LogManager.GetCurrentClassLogger();
         private IEqualityComparer<User> userEqualityComparer;
-        private Func<int> uniqueIdGenerator;
+        private Func<int, int> uniqueIdGenerator;
         private ICollection<User> users;
+        private int lastGeneratedId = 0;
 
         private ReaderWriterLockSlim readWriteLock = new ReaderWriterLockSlim();
 
@@ -32,20 +33,19 @@ namespace UserServiceLibrary
         /// If not specified, default idGenerator will be used</param>
         /// <param name="userEqualityComparer">Uses to determine if two users are same. 
         /// If not specified, <see cref="EqualityComparer{User}.Default"/> will be used</param>
-        /// <param name="userStorage">Implementation of <see cref="IUserStorage"/> interface.
+        /// <param name="userStorage">Implementation of <see cref="IUserServiceStorage"/> interface.
         /// If not provided, <see cref="SaveState"/> and <see cref="LoadSavedState"/>
         /// will throw an <see cref="StatefulServiceException"/></param>
         public MasterUserService(
-            Func<int> uniqueIdGenerator = null,
+            Func<int, int> uniqueIdGenerator = null,
             IEqualityComparer<User> userEqualityComparer = null,
-            IUserStorage userStorage = null)
+            IUserServiceStorage userStorage = null)
         {
             logger.Log(LogLevel.Trace, $"{nameof(MasterUserService)} ctor started");
 
             if (uniqueIdGenerator == null)
             {
-                int counter = 1;
-                this.uniqueIdGenerator = () => counter++;
+                this.uniqueIdGenerator = lastId => lastId + 1;
             }
             else
             {
@@ -67,7 +67,7 @@ namespace UserServiceLibrary
         /// If null, <see cref="LoadSavedState"/> and <see cref="SaveState"/>
         /// will throw <see cref="StatefulServiceException"/>
         /// </summary>
-        public IUserStorage UserStorage { get; set; }
+        public IUserServiceStorage UserStorage { get; set; }
 
         /// <inheritdoc cref="IUserService.Add"/>
         public void Add(User user)
@@ -95,7 +95,7 @@ namespace UserServiceLibrary
                         $"{nameof(user)} is already exists");
                 }
 
-                user.Id = uniqueIdGenerator();
+                user.Id = lastGeneratedId = uniqueIdGenerator(lastGeneratedId);
                 users.Add(user);
             }
             finally
@@ -158,7 +158,7 @@ namespace UserServiceLibrary
             }
             finally
             {
-                readWriteLock.ExitWriteLock();
+                readWriteLock.ExitReadLock();
             }
 
             return usersList;
@@ -166,7 +166,7 @@ namespace UserServiceLibrary
 
         /// <inheritdoc cref="IStatefulService.SaveState"/>
         /// <exception cref="StatefulServiceException">Throws when 
-        /// <see cref="IUserStorage"/> is not provided</exception>
+        /// <see cref="IUserServiceStorage"/> is not provided</exception>
         public void SaveState()
         {
             logger.Log(LogLevel.Trace, "Saving state...");
@@ -188,7 +188,8 @@ namespace UserServiceLibrary
                     readWriteLock.ExitReadLock();
                 }
 
-                UserStorage.StoreUsers(usersList);
+                UserStorage.StoreServiceState(
+                    new UserServiceState { Users = usersList, LastGeneratedId = lastGeneratedId });
             }
             catch (Exception ex)
             {
@@ -200,7 +201,7 @@ namespace UserServiceLibrary
 
         /// <inheritdoc cref="IStatefulService.LoadSavedState"/>
         /// /// <exception cref="StatefulServiceException">Throws when 
-        /// <see cref="IUserStorage"/> is not provided</exception>
+        /// <see cref="IUserServiceStorage"/> is not provided</exception>
         public void LoadSavedState()
         {
             logger.Log(LogLevel.Trace, "Loading state...");
@@ -211,10 +212,12 @@ namespace UserServiceLibrary
 
             try
             {
+                UserServiceState state = UserStorage.LoadServiceState();
                 readWriteLock.EnterWriteLock();
                 try
                 {
-                    users = new HashSet<User>(UserStorage.LoadUsers());
+                    users = new HashSet<User>(state.Users);
+                    lastGeneratedId = state.LastGeneratedId;
                 }
                 finally
                 {
