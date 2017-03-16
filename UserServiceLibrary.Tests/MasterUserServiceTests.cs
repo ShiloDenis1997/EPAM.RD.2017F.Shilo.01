@@ -51,7 +51,8 @@ namespace UserServiceLibrary.Tests
         public void Add_TwoSimilarUsersWithEqualityComparer_ExceptionThrown()
         {
             // Arrange
-            IUserService service = new MasterUserService(null, new UserEqualityComparer());
+            // IUserService service = new MasterUserService(null, new UserEqualityComparer());
+            IUserService service = new MasterUserService();
             User user1 = new User
             {
                 DateOfBirth = DateTime.Now,
@@ -60,7 +61,7 @@ namespace UserServiceLibrary.Tests
             };
             User user2 = new User
             {
-                DateOfBirth = DateTime.Now,
+                DateOfBirth = user1.DateOfBirth,
                 Firstname = "Denis",
                 Secondname = "Shilo",
             };
@@ -129,7 +130,8 @@ namespace UserServiceLibrary.Tests
         public void Remove_ExistingSimilarUser_NothingHappend()
         {
             // Arrange
-            IUserService service = new MasterUserService(null, new UserEqualityComparer());
+            // IUserService service = new MasterUserService(null, new UserEqualityComparer());
+            IUserService service = new MasterUserService();
             User user1 = new User
             {
                 DateOfBirth = DateTime.Now,
@@ -150,7 +152,7 @@ namespace UserServiceLibrary.Tests
                     service.Add(user1);
                     service.Remove(user2);
                 });
-            IEnumerable<User> res = service.Search(u => new UserEqualityComparer().Equals(u, user1));
+            IEnumerable<User> res = service.Search(u => u.Equals(user1));
             Assert.AreEqual(0, res.Count());
         }
 
@@ -230,28 +232,28 @@ namespace UserServiceLibrary.Tests
             }
         }
 
-        private class UserEqualityComparer : IEqualityComparer<User>
-        {
-            public bool Equals(User firstUser, User secondUser)
-            {
-                if (ReferenceEquals(firstUser, secondUser))
-                {
-                    return true;
-                }
+        //private class UserEqualityComparer : IEqualityComparer<User>
+        //{
+        //    public bool Equals(User firstUser, User secondUser)
+        //    {
+        //        if (ReferenceEquals(firstUser, secondUser))
+        //        {
+        //            return true;
+        //        }
 
-                if (ReferenceEquals(secondUser, null)
-                    || ReferenceEquals(firstUser, null))
-                {
-                    return false;
-                }
+        //        if (ReferenceEquals(secondUser, null)
+        //            || ReferenceEquals(firstUser, null))
+        //        {
+        //            return false;
+        //        }
 
-                return string.Equals(firstUser.Firstname, secondUser.Firstname);
-            }
+        //        return string.Equals(firstUser.Firstname, secondUser.Firstname);
+        //    }
 
-            public int GetHashCode(User user)
-            {
-                return user.Firstname.GetHashCode();
-            }
-        }
+        //    public int GetHashCode(User user)
+        //    {
+        //        return user.Firstname.GetHashCode();
+        //    }
+        //}
     }
 }

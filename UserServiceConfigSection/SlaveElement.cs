@@ -21,6 +21,9 @@ namespace UserServiceConfigSection
             set { base["ipAddress"] = value; }
         }
 
+        /// <summary>
+        /// Returns typed ip address of slave element
+        /// </summary>
         public IPAddress TipAddress => IPAddress.Parse(IpAddress);
 
         [ConfigurationProperty("port", DefaultValue = "8080", IsKey = false, IsRequired = true)]
@@ -31,6 +34,9 @@ namespace UserServiceConfigSection
             set { base["port"] = value; }
         }
 
+        /// <summary>
+        /// Returns typed port number of slave element
+        /// </summary>
         public int Tport => int.Parse(Port);
 
         [ConfigurationProperty("domain", DefaultValue = "UserServiceDomain", IsRequired = false)]

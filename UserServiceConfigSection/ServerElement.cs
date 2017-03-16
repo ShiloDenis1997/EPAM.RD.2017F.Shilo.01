@@ -4,6 +4,9 @@ using System.Net;
 
 namespace UserServiceConfigSection
 {
+    /// <summary>
+    /// Enumaration of available service types
+    /// </summary>
     public enum ServiceType
     {
         Master = 0,
@@ -20,6 +23,9 @@ namespace UserServiceConfigSection
             set { base["type"] = value; }
         }
 
+        /// <summary>
+        /// Returns typed value of service type
+        /// </summary>
         public ServiceType Ttype
         {
             get
@@ -44,6 +50,9 @@ namespace UserServiceConfigSection
             set { base["ipAddress"] = value; }
         }
 
+        /// <summary>
+        /// Returns typed ip address of server element
+        /// </summary>
         public IPAddress TipAddress => IPAddress.Parse(IpAddress);
 
         [ConfigurationProperty("port", DefaultValue = "8080", IsRequired = false)]
@@ -54,6 +63,9 @@ namespace UserServiceConfigSection
             set { base["port"] = value; }
         }
 
+        /// <summary>
+        /// Returns typed port number of server element
+        /// </summary>
         public int Tport => int.Parse(Port);
 
         [ConfigurationProperty("domain", DefaultValue = "UserServiceDomain", IsRequired = false)]

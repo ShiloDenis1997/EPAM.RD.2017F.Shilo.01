@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace UserServiceLibrary
 {
+    /// <summary>
+    /// Incapsulates a state of user service
+    /// </summary>
     [Serializable]
     public class UserServiceState
     {

@@ -37,14 +37,21 @@ namespace UserStorageLibrary
         /// Stores <paramref name="state"/> in xml-file
         /// </summary>
         /// <param name="state">State to store in</param>
-        /// <exception cref="CannotSerializeException">Throws if cannot serialize the
+        /// <exception cref="CannotStoreException">Throws if cannot serialize the
         /// <paramref name="state"/> in xml-file</exception>
         public void StoreServiceState(UserServiceState state)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(UserServiceState));
-            using (FileStream fs = new FileStream(this.FileName, FileMode.Create))
+            try
             {
-                serializer.Serialize(fs, state);
+                using (FileStream fs = new FileStream(this.FileName, FileMode.Create))
+                {
+                    serializer.Serialize(fs, state);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new CannotStoreException("Cannot store service state", ex);
             }
         }
 
@@ -52,15 +59,22 @@ namespace UserStorageLibrary
         /// Loads state from xml-file
         /// </summary>
         /// <returns>Loaded state of the service</returns>
-        /// <exception cref="CannotDeserializeException">Throws if cannot deserialize
+        /// <exception cref="CannotLoadException">Throws if cannot deserialize
         /// state from xml-file</exception>
         public UserServiceState LoadServiceState()
         {
             UserServiceState state;
             XmlSerializer serializer = new XmlSerializer(typeof(UserServiceState));
-            using (FileStream fs = new FileStream(this.FileName, FileMode.Open))
+            try
             {
-                state = (UserServiceState)serializer.Deserialize(fs);
+                using (FileStream fs = new FileStream(this.FileName, FileMode.Open))
+                {
+                    state = (UserServiceState) serializer.Deserialize(fs);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new CannotLoadException("Cannot load service state", ex);
             }
 
             return state;

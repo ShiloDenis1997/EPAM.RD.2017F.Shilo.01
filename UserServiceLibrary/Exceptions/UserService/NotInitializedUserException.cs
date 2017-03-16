@@ -3,6 +3,9 @@ using System.Runtime.Serialization;
 
 namespace UserServiceLibrary.Exceptions.UserService
 {
+    /// <summary>
+    /// Indicates that user is not initialized
+    /// </summary>
     [Serializable]
     public class NotInitializedUserException : UserServiceException
     {

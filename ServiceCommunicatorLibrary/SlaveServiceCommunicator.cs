@@ -13,16 +13,38 @@ using UserServiceLibrary.Interfaces;
 
 namespace ServiceCommunicatorLibrary
 {
+    /// <summary>
+    /// Communicates with <see cref="ISlaveService"/> and receives messages from 
+    /// <see cref="MasterServiceCommunicator"/>
+    /// </summary>
     public class SlaveServiceCommunicator : MarshalByRefObject, IDisposable
     {
-        private static Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+        /// <summary>
+        /// Slave service to communicate with
+        /// </summary>
         private ISlaveService slaveService;
-        private TcpClient serverConnection;
-        private TcpListener serverListener;
-        private IPAddress slaveAddress;
-        private int slavePort;
 
+        /// <summary>
+        /// Connection to server to receive messages
+        /// </summary>
+        private TcpClient serverConnection;
+
+        /// <summary>
+        /// Server listener to wait for server's connection
+        /// </summary>
+        private TcpListener serverListener;
+
+        /// <summary>
+        /// Creates a new instance of <see cref="SlaveServiceCommunicator"/>
+        /// </summary>
+        /// <param name="slaveService"></param>
+        /// <param name="slaveAddress"></param>
+        /// <param name="slavePort"></param>
+        /// <exception cref="ArgumentNullException">Throws when one of the parameters is null</exception>
+        /// <exception cref="ArgumentException">Throws when <see cref="slavePort"/>
+        ///  is less or equal to zero</exception>
         public SlaveServiceCommunicator(
             ISlaveService slaveService, IPAddress slaveAddress, int slavePort)
         {
@@ -41,30 +63,37 @@ namespace ServiceCommunicatorLibrary
                 throw new ArgumentException($"{nameof(slavePort)} is less or equal to zero");
             }
 
-            logger.Log(LogLevel.Trace, $"{nameof(SlaveServiceCommunicator)} ctor started");
+            Logger.Log(LogLevel.Trace, $"{nameof(SlaveServiceCommunicator)} ctor started");
             this.slaveService = slaveService;
-            this.slaveAddress = slaveAddress;
-            this.slavePort = slavePort;
             serverListener = new TcpListener(slaveAddress, slavePort);
-            logger.Log(
+            Logger.Log(
                 LogLevel.Trace, $"{nameof(SlaveServiceCommunicator)} serverListener task starting");
             ListenServer();
         }
 
+        /// <summary>
+        /// Closes connection to server
+        /// </summary>
         ~SlaveServiceCommunicator()
         {
             serverConnection?.Close();
         }
 
+        /// <summary>
+        /// Closes connection to server
+        /// </summary>
         public void Dispose()
         {
             GC.SuppressFinalize(this);
             serverConnection?.Close();
         }
 
+        /// <summary>
+        /// Asynchronously listen for server connection and then for messages from server
+        /// </summary>
         private async void ListenServer()
         {
-            logger.Log(LogLevel.Trace, "Server listener thread started");
+            Logger.Log(LogLevel.Trace, "Server listener thread started");
             try
             {
                 serverListener.Start();
@@ -74,7 +103,7 @@ namespace ServiceCommunicatorLibrary
                 while (true)
                 {
                     CommunicationMessage message = (CommunicationMessage)formatter.Deserialize(stream);
-                    logger.Log(LogLevel.Info, $"{message} received");
+                    Logger.Log(LogLevel.Info, $"{message} received");
                     if (message.Operation == UserOperation.Add)
                     {
                         slaveService.UserAddedHandler(this, new UserEventArgs { User = message.User });
@@ -87,11 +116,11 @@ namespace ServiceCommunicatorLibrary
             }
             catch (SocketException ex)
             {
-                logger.Log(LogLevel.Error, ex);
+                Logger.Log(LogLevel.Error, ex);
             }
             catch (Exception ex)
             {
-                logger.Log(LogLevel.Trace, ex);
+                Logger.Log(LogLevel.Trace, ex);
             }
         }
     }

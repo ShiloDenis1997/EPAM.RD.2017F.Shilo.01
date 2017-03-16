@@ -48,8 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\CannotDeserializeException.cs" />
-    <Compile Include="Exceptions\CannotSerializeException.cs" />
+    <Compile Include="Exceptions\CannotLoadException.cs" />
+    <Compile Include="Exceptions\CannotStoreException.cs" />
     <Compile Include="UserStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -8,23 +8,26 @@ using UserServiceLibrary.Exceptions.UserStorage;
 
 namespace UserStorageLibrary.Exceptions
 {
+    /// <summary>
+    /// Indicates that state cannot be stored
+    /// </summary>
     [Serializable]
-    public class CannotSerializeException : UserStorageException
+    public class CannotStoreException : UserStorageException
     {
-        public CannotSerializeException()
+        public CannotStoreException()
         {
         }
 
-        public CannotSerializeException(string message) : base(message)
+        public CannotStoreException(string message) : base(message)
         {
         }
 
-        public CannotSerializeException(string message, Exception innerException) 
+        public CannotStoreException(string message, Exception innerException) 
             : base(message, innerException)
         {
         }
 
-        protected CannotSerializeException(SerializationInfo info, StreamingContext context) 
+        protected CannotStoreException(SerializationInfo info, StreamingContext context) 
             : base(info, context)
         {
         }

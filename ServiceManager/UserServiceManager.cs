@@ -32,8 +32,10 @@ namespace ServiceManager
         /// <summary>
         /// Constructs new instance of <see cref="UserServiceManager"/>
         /// </summary>
-        /// <exception cref="UnrecognizedServiceTypeException">When service type in 
+        /// <exception cref="UnrecognizedServiceTypeException">Throws when service type in 
         /// configs is unrecognized</exception>
+        /// <exception cref="ConfigurationErrorsException">Throws when userService section is not
+        /// provided in configs</exception>
         private UserServiceManager()
         {
             userServiceSection =
@@ -47,12 +49,20 @@ namespace ServiceManager
         }
 
         /// <summary> Instance of <see cref="UserServiceManager"/></summary>
-        /// <exception cref="UnrecognizedServiceTypeException">When service type in 
+        /// <exception cref="UnrecognizedServiceTypeException">Throws when service type in 
         /// configs is unrecognized</exception>
         public static UserServiceManager Instance => InstanceLazy.Value;
 
+        /// <summary>
+        /// Type of service or services that will be configured
+        /// </summary>
         public ServiceType ServiceType { get; private set; }
 
+        /// <summary>
+        /// Configures master service and loads it in separate domain
+        /// </summary>
+        /// <returns>Configured <see cref="IMasterService"/> or null if <see cref="ServiceType"/>
+        /// is not Master</returns>
         public IMasterService GetMasterService()
         {
             if (ServiceType != ServiceType.Master)
@@ -90,6 +100,11 @@ namespace ServiceManager
             return masterService;
         }
 
+        /// <summary>
+        /// Configures slave services and loads them in separate domains
+        /// </summary>
+        /// <returns>Enumeration of configured <see cref="ISlaveService"/> or 
+        /// null if <see cref="ServiceType"/> is not Slave</returns>
         public IEnumerable<ISlaveService> GetSlaveServices()
         {
             if (ServiceType != ServiceType.Slave)
@@ -112,6 +127,9 @@ namespace ServiceManager
             return slaveServices;
         }
 
+        /// <summary>
+        /// Unloads services from domains according to a service type
+        /// </summary>
         public void UnloadService()
         {
             switch (ServiceType)

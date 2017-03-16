@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace ServiceManager.Exceptions
 {
+    /// <summary>
+    /// Exception to indicate that type of service in configs does not recognized
+    /// </summary>
     public class UnrecognizedServiceTypeException : Exception
     {
         public UnrecognizedServiceTypeException()

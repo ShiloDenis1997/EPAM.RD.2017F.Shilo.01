@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace UserServiceLibrary.Exceptions.StatefulService
 {
+    /// <summary>
+    /// Indicates that state of service cannot be loaded
+    /// </summary>
     [Serializable]
     public class CannotLoadStateException : StatefulServiceException
     {

@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace UserServiceLibrary.Exceptions.UserService
 {
     /// <summary>
-    /// Root of the exception hierarcy for user services
+    /// Root of the exception hierarchy for user services
     /// </summary>
     [Serializable]
     public class UserServiceException : Exception

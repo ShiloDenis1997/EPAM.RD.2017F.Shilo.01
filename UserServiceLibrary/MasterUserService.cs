@@ -55,7 +55,7 @@ namespace UserServiceLibrary
             this.userEqualityComparer = userEqualityComparer
                                         ?? EqualityComparer<User>.Default;
             UserStorage = userStorage;
-            users = new HashSet<User>();
+            users = new HashSet<User>(this.userEqualityComparer);
             logger.Log(LogLevel.Trace, $"{nameof(MasterUserService)} ctor finished");
         }
 
@@ -121,15 +121,13 @@ namespace UserServiceLibrary
             readWriteLock.EnterWriteLock();
             try
             {
-                removingUser = users.FirstOrDefault(
-                    u => userEqualityComparer.Equals(u, user));
-                if (removingUser == null)
+                if (!users.Contains(user))
                 {
                     throw new UserDoesNotExistException(
                         $"{nameof(user)} does not exists");
                 }
 
-                users.Remove(removingUser);
+                users.Remove(user);
             }
             finally
             {
@@ -137,7 +135,7 @@ namespace UserServiceLibrary
             }
 
             logger.Log(LogLevel.Trace, $"{user} removed");
-            StartUserRemoved(removingUser);
+            StartUserRemoved(user);
         }
 
         /// <inheritdoc cref="IUserService.Search"/>

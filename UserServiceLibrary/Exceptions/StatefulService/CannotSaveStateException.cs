@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace UserServiceLibrary.Exceptions.StatefulService
 {
+    /// <summary>
+    /// Indicates that service state cannot be saved
+    /// </summary>
     [Serializable]
     public class CannotSaveStateException : StatefulServiceException
     {

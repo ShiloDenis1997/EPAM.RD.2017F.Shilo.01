@@ -8,23 +8,26 @@ using UserServiceLibrary.Exceptions.UserStorage;
 
 namespace UserStorageLibrary.Exceptions
 {
+    /// <summary>
+    /// Indicates that state cannot be loaded
+    /// </summary>
     [Serializable]
-    public class CannotDeserializeException : UserStorageException
+    public class CannotLoadException : UserStorageException
     {
-        public CannotDeserializeException()
+        public CannotLoadException()
         {
         }
 
-        public CannotDeserializeException(string message) : base(message)
+        public CannotLoadException(string message) : base(message)
         {
         }
 
-        public CannotDeserializeException(string message, Exception innerException) 
+        public CannotLoadException(string message, Exception innerException) 
             : base(message, innerException)
         {
         }
 
-        protected CannotDeserializeException(SerializationInfo info, StreamingContext context) 
+        protected CannotLoadException(SerializationInfo info, StreamingContext context) 
             : base(info, context)
         {
         }

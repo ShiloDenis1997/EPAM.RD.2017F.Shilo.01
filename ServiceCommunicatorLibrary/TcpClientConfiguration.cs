@@ -2,6 +2,7 @@
 
 namespace ServiceCommunicatorLibrary
 {
+
     public class TcpClientConfiguration
     {
         public IPAddress Address { get; set; }

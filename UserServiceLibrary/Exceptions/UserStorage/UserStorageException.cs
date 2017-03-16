@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace UserServiceLibrary.Exceptions.UserStorage
 {
+    /// <summary>
+    /// Commmon exception that can be thrown in case of any errors
+    /// </summary>
     [Serializable]
     public class UserStorageException : Exception
     {

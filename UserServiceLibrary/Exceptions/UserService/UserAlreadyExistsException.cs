@@ -3,6 +3,9 @@ using System.Runtime.Serialization;
 
 namespace UserServiceLibrary.Exceptions.UserService
 {
+    /// <summary>
+    /// Indicates that user already exists
+    /// </summary>
     [Serializable]
     public class UserAlreadyExistsException : UserServiceException
     {

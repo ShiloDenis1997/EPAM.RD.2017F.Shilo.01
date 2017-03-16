@@ -65,22 +65,20 @@ namespace UserServiceLibrary
             }
 
             User other = obj as User;
-            return Id == other.Id && 
-                string.Equals(Firstname, other.Firstname, StringComparison.OrdinalIgnoreCase) && 
+            return string.Equals(Firstname, other.Firstname, StringComparison.OrdinalIgnoreCase) && 
                 string.Equals(Secondname, other.Secondname, StringComparison.OrdinalIgnoreCase) && 
                 DateOfBirth.Equals(other.DateOfBirth);
         }
 
-        /// <summary>
-        /// Returns a hash code of <see cref="User"/>. 
-        /// Id field mustn't changing if <see cref="User"/> is
-        /// in a hashtable
-        /// </summary>
-        /// <returns></returns>
         public override int GetHashCode()
         {
-            var hashCode = Id;
-            return hashCode;
+            unchecked
+            {
+                var hashCode = Firstname?.GetHashCode() ?? 0;
+                hashCode = (hashCode*397) ^ (Secondname?.GetHashCode() ?? 0);
+                hashCode = (hashCode*397) ^ DateOfBirth.GetHashCode();
+                return hashCode;
+            }
         }
 
         public override string ToString() => $"{Firstname} {Secondname}";

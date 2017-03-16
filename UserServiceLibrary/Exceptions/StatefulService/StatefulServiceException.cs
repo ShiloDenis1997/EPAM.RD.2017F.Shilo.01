@@ -9,8 +9,8 @@ using UserServiceLibrary.Interfaces;
 namespace UserServiceLibrary.Exceptions.StatefulService
 {
     /// <summary>
-    /// Exception that can be thrown by <see cref="IStatefulService"/>
-    /// implementations
+    /// Common exception that can be thrown by <see cref="IStatefulService"/>
+    /// in case of any errors
     /// </summary>
     [Serializable]
     public class StatefulServiceException : Exception
